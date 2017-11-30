@@ -12,5 +12,13 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('transcription.index');
+})->name('index');
+
+Route::get('/audio', function () {
+    return view('transcription.audio');
+})->name('audio');
+
+Route::get('/validation', function () {
+    return view('transcription.validation');
+})->name('validation');
