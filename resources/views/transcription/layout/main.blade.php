@@ -42,12 +42,36 @@
                     Хуудаснууд
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Нэвтрэх</a>
-                    <a class="dropdown-item" href="#">Бүртгүүлэх</a>
+                    <a class="dropdown-item" href="{{ route('login') }}">Нэвтрэх</a>
+                    <a class="dropdown-item" href="{{ route('register') }}">Бүртгүүлэх</a>
                     <a class="dropdown-item" href="{{ route('audio') }}">Transcribe</a>
                     <a class="dropdown-item" href="{{ route('validation') }}">Шалгах</a>
                 </div>
             </li>
+        </ul>
+        <ul class="navbar-nav navbar-right">
+            @guest
+                <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Нэвтрэх</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Бүртгүүлэх</a></li>
+            @else
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="far fa-user"></i> {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <div class="dropdown-item">
+                            <a href="{{ route('logout') }}"
+                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                Гарах
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            @endguest
         </ul>
     </div>
 </nav>

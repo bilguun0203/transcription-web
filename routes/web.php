@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('transcription.index');
 })->name('index');
 
+Route::get('/home', function () {
+    return view('transcription.index');
+})->name('home');
+
 Route::get('/audio', function () {
     return view('transcription.audio');
 })->name('audio');
@@ -24,4 +28,4 @@ Route::get('/validation', function () {
 })->name('validation');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
