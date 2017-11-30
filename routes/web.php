@@ -22,3 +22,6 @@ Route::get('/audio', function () {
 Route::get('/validation', function () {
     return view('transcription.validation');
 })->name('validation');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
