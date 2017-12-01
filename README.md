@@ -1,42 +1,37 @@
 # Transcription Web
 
+### Суулгах
 
-##### .env файл
+#### Laravel болон бусад шаардлагатай package суулгах
 
-```
-APP_NAME="Transcription Web"
-APP_ENV=local
-APP_KEY=base64:tQ3wvIvGp8wimmTGL1wq/LLTo01ovRSRLB/GZH/DoXw=
-APP_DEBUG=true
-APP_LOG_LEVEL=debug
-APP_URL=http://transcription.dev
+`composer install` тушаалаар шаардлагатай package-уудыг суулгах
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=transcription-web
-DB_USERNAME=root
-DB_PASSWORD=toor
+#### .env файл тохируулах
 
-BROADCAST_DRIVER=log
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-SESSION_LIFETIME=120
-QUEUE_DRIVER=sync
+1. `.env.example` файлыг `.env` болгох
+2. `php artisan key:generate` тушаалыг өгч `APP_KEY` үүсгэх
+3. Бусад шаардлагатай тохиргоог доорх хэсгээс харна уу
 
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+`APP_NAME="Transcription Web"`
 
-MAIL_DRIVER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
+`APP_ENV=local`
 
-PUSHER_APP_ID=
-PUSHER_APP_KEY=
-PUSHER_APP_SECRET=
+`APP_DEBUG=true`
 
-```
+`APP_LOG_LEVEL=debug`
+
+`APP_URL=http://transcription.dev` http://transcription.web-ийн оронд өөрийн веб рүү хандах хаягаа бичнэ
+
+--
+
+`DB_CONNECTION=mysql` - MySQL
+
+`DB_HOST=127.0.0.1`
+
+`DB_PORT=3306`
+
+`DB_DATABASE=transcription-web` - Өгөгдлийн сангийн нэр
+
+`DB_USERNAME=root` - Өгөгдлийн сангийн хэрэглэгчийн нэр
+
+`DB_PASSWORD=` - Өгөгдлийн сангийн нууц үг
