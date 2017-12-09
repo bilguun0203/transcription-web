@@ -17,7 +17,7 @@ class CreateTaskTable extends Migration
             $table->increments('id');
             $table->integer('audio_id')->unsigned();
             $table->char('type', 1)->nullable(false)->default('t');
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable(true);
             $table->char('status', 1)->nullable(false);
             $table->timestamps();
 
