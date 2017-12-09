@@ -26,19 +26,21 @@
                                 <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                                 <!--<a href="#" class="card-link">Card link</a>-->
                                 <!--<a href="#" class="card-link">Another link</a>-->
-                                <audio controls>
+                                <audio data-plyr='{ "autoplay":true }' controls>
                                     <source src="{{ asset('audio_files/agent-9009-1468979090-74251.wav') }}" type="audio/mp3">
                                     <!--<source src="/path/to/audio.ogg" type="audio/ogg">-->
                                 </audio>
                                 <form>
+                                    {{ csrf_field() }}
                                     <div class="form-group">
                                         <label for="text" class="bmd-label-floating">Text</label>
-                                        <input type="text" class="form-control" id="text" required>
+                                        <input type="text" class="form-control" id="text" required autofocus>
                                         <span class="bmd-help">...</span>
                                     </div>
                                     <br>
-                                    <a href="#prev" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="audio1.wav"><i class="far fa-arrow-left"></i> Өмнөх</a>
-                                    <a href="#next" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="audio3.wav">Дараах <i class="far fa-arrow-right"></i></a>
+                                    {{--<a href="#prev" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="audio1.wav"><i class="far fa-arrow-left"></i> Өмнөх</a>--}}
+                                    {{--<a href="#next" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="audio3.wav">Дараах <i class="far fa-arrow-right"></i></a>--}}
+                                    <a href="#skip" class="btn btn-outline-danger">Алгасах <i class="far fa-arrow-right"></i></a>
                                     <!--<button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('text').value = '';document.getElementById('text').focus()">Арилгах</button>-->
                                     <div class="float-right">
                                         <button type="submit" class="btn btn-raised btn-info" data-toggle="tooltip" data-placement="top" title="Хадгалаад дараагийн файл руу шилжих"><i class="far fa-save"></i> Хадгалах</button>
@@ -60,6 +62,8 @@
     @parent
     <script src="{{ asset('assets/js/plyr.js') }}"></script>
     <script>
-        plyr.setup();
+        $(document).ready(function() {
+            plyr.setup();
+        });
     </script>
 @endsection

@@ -1,28 +1,23 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: bilguun
+ * Date: 12/9/17
+ * Time: 11:02 PM
+ */
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class HomeController extends TController
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
+
+    public function home(){
+        return view('transcription.index');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('home');
+    public function profile(){
+        return view('transcription.profile');
     }
+
 }

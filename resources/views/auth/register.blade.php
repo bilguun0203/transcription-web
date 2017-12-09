@@ -14,7 +14,7 @@
                             {{ csrf_field() }}
 
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="bmd-label-floating"><i class="far fa-user"></i> Хэрэглэгчийн нэр /Оюутны ID/</label>
+                                <label for="name" class="bmd-label-floating"><i class="far fa-user"></i> Хэрэглэгчийн нэр /ID/</label>
                                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name" value="{{ old('name') }}" required autofocus>
                                 @if ($errors->has('name'))
                                     <small class="bmd-help">{{ $errors->first('name') }}</small>

@@ -15,10 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
     <!-- FontAwesome 5 icons -->
-    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-pro-solid.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-pro-regular.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-pro-light.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-pro-core.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-all.min.css') }}">
     @show
 
     <title>@yield('title')</title>
@@ -26,8 +23,8 @@
 <body>
 
 @section('navbar')
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Navbar</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
+    <a class="navbar-brand" href="{{ route('index') }}"><i class="far fa-music"></i> <i class="far fa-arrow-right"></i> <i class="far fa-font"></i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -42,14 +39,16 @@
                     Хуудаснууд
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{{ route('login') }}">Нэвтрэх</a>
-                    <a class="dropdown-item" href="{{ route('register') }}">Бүртгүүлэх</a>
-                    <a class="dropdown-item" href="{{ route('transcribe') }}">Transcribe</a>
+                    <a class="dropdown-item" href="{{ route('transcribe') }}">Бичвэрт буулгах</a>
                     <a class="dropdown-item" href="{{ route('validate') }}">Шалгах</a>
+                    @if(Auth::user()->permission == 'admin')
+                        <a class="dropdown-item" href="{{ route('audio.list') }}">Аудио файлууд</a>
+                        <a class="dropdown-item" href="{{ route('audio.upload') }}">Файл нэмэх</a>
+                    @endif
                 </div>
             </li>
         </ul>
-        <ul class="navbar-nav navbar-right">
+        <ul class="navbar-nav ml-auto">
             @guest
                 <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Нэвтрэх</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Бүртгүүлэх</a></li>
@@ -58,11 +57,11 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="far fa-user"></i> {{ Auth::user()->name }}
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <div class="dropdown-item">
-                            <a href="{{ route('logout') }}"
-                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                Гарах
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a href="{{ route('profile') }}" class="dropdown-item">Миний булан</a>
+                        <div>
+                            <a href="{{ route('logout') }}" class="dropdown-item"
+                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">Гарах
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

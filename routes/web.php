@@ -11,24 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('transcription.index');
-})->name('index');
+Route::get('/', 'HomeController@home')->name('index');
 
-Route::get('/home', function () {
-    return view('transcription.index');
-})->name('home');
+Route::get('/transcribe', 'TaskController@transcribe')->name('transcribe');
 
-Route::get('/transcribe', function () {
-    return view('transcription.transcribe');
-})->name('transcribe');
-Route::get('/validate', function () {
-    return view('transcription.validate');
-})->name('validate');
+Route::get('/validate', 'TaskController@validate_transcription')->name('validate');
 
-Route::get('/validation', function () {
-    return view('transcription.validation');
-})->name('validation');
+Route::get('/profile', 'HomeController@profile')->name('profile');
+
+Route::get('/audio', 'AudioController@audio')->name('audio.list');
+
+Route::get('/audio/upload', 'AudioController@add')->name('audio.upload');
 
 Auth::routes();
 
