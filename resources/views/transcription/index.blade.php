@@ -9,8 +9,8 @@
             <div class="col-md-5 col-sm-8 col-xs-12">
                 <a href="{{ route('login') }}" class="btn btn-outline-primary btn-block">Нэвтрэх хуудас</a>
                 <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-block">Бүртгүүлэх хуудас</a>
-                <a href="{{ route('validation') }}" class="btn btn-outline-info btn-block">Transcribe хийх хуудас</a>
-                <a href="{{ route('validation') }}" class="btn btn-outline-danger btn-block">Шалгах хэсэг</a>
+                <a href="{{ route('transcribe') }}" class="btn btn-outline-info btn-block">Transcribe хийх хуудас</a>
+                <a href="{{ route('validate') }}" class="btn btn-outline-danger btn-block">Шалгах хэсэг</a>
 
                 <!-- <div class="card"> -->
                 <!-- </div> -->

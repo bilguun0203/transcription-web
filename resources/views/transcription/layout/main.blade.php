@@ -44,8 +44,8 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('login') }}">Нэвтрэх</a>
                     <a class="dropdown-item" href="{{ route('register') }}">Бүртгүүлэх</a>
-                    <a class="dropdown-item" href="{{ route('audio') }}">Transcribe</a>
-                    <a class="dropdown-item" href="{{ route('validation') }}">Шалгах</a>
+                    <a class="dropdown-item" href="{{ route('transcribe') }}">Transcribe</a>
+                    <a class="dropdown-item" href="{{ route('validate') }}">Шалгах</a>
                 </div>
             </li>
         </ul>

@@ -19,13 +19,17 @@ Route::get('/home', function () {
     return view('transcription.index');
 })->name('home');
 
-Route::get('/audio', function () {
-    return view('transcription.audio');
-})->name('audio');
+Route::get('/transcribe', function () {
+    return view('transcription.transcribe');
+})->name('transcribe');
+Route::get('/validate', function () {
+    return view('transcription.validate');
+})->name('validate');
 
 Route::get('/validation', function () {
     return view('transcription.validation');
 })->name('validation');
+
 Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('home');
