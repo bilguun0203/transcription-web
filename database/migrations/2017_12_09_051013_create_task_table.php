@@ -17,12 +17,12 @@ class CreateTaskTable extends Migration
             $table->increments('id');
             $table->integer('audio_id')->unsigned();
             $table->char('type', 1)->nullable(false)->default('t');
-            $table->integer('assigned_to')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->char('status', 1)->nullable(false);
             $table->timestamps();
 
             $table->foreign('audio_id')->references('id')->on('audio');
-            $table->foreign('assigned_to')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

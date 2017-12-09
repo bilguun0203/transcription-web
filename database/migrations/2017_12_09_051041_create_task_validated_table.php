@@ -17,13 +17,13 @@ class CreateTaskValidatedTable extends Migration
             $table->increments('id');
             $table->integer('task_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->integer('validated_task_transcription')->unsigned();
+            $table->integer('task_transcription_id')->unsigned();
             $table->char('validation_status', 1)->nullable(false);
             $table->timestamps();
 
             $table->foreign('task_id')->references('id')->on('task');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('validated_task_transcription')->references('id')->on('task_transcribed');
+            $table->foreign('task_transcribed_id')->references('id')->on('task_transcribed');
         });
     }
 

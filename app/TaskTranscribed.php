@@ -4,25 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class TaskTranscribed extends Model
 {
-    protected $table = 'task';
+    protected $table = 'task_transcribed';
 
     protected $fillable = [
-        'audio_id',
         'user_id',
-        'type',
-        'status'
+        'transcription',
+        'task_id'
     ];
 
-    public function audio()
+    public function task()
     {
-        return $this->belongsTo('App\Audio');
-    }
-
-    public function transcribed()
-    {
-        return $this->hasMany('App\TaskTranscribed');
+        return $this->belongsTo('App\Task');
     }
 
     public function validated()
