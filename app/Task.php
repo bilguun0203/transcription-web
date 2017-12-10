@@ -34,4 +34,53 @@ class Task extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function getLatestTranscribed()
+    {
+        $task = $this;
+        if($this->type == 'v'){
+            foreach ($this->audio->tasks as $item){
+                if($item->type == 't'){
+                    $task = $item;
+                }
+            }
+        }
+        return $task->transcribed->sortByDesc('created_at')->first();
+    }
+
+    public function getLatestValidated()
+    {
+        $task = $this->getVTask();
+        return $task->validated->sortByDesc('created_at')->first();
+    }
+
+    public function getNotValidated()
+    {
+        $task = $this->getTTask();
+        return $task->transcribed->sortByDesc('created_at')->first();
+    }
+
+    public function getTTask()
+    {
+        if($this->type == 'v'){
+            foreach ($this->audio->tasks as $item){
+                if($item->type == 't'){
+                    return $item;
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function getVTask()
+    {
+        if($this->type == 't'){
+            foreach ($this->audio->tasks as $item){
+                if($item->type == 'v'){
+                    return $item;
+                }
+            }
+        }
+        return $this;
+    }
 }

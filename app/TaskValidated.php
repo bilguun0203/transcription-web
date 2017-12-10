@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class TaskValidated extends Model
 {
@@ -14,6 +15,32 @@ class TaskValidated extends Model
         'task_transcribed_id',
         'validation_status'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->user_id = Auth::user()->id;
+        });
+        self::created(function ($model) {
+            $model->task->user_id = null;
+            $model->task->status = 0;
+            $model->task->save();
+            if($model->validation_status == 'd') {
+                $task = $model->task->getTTask();
+                $task->status = 1;
+                $task->save();
+            }
+        });
+
+        self::deleting(function ($model) {
+            if($model->task->validated->count() == 1){
+                $model->task->status = 1;
+                $model->task->status = 1;
+            }
+        });
+    }
 
     public function task()
     {

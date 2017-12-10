@@ -11,16 +11,22 @@
 |
 */
 
-Route::get('/', 'HomeController@home')->name('home');
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/', 'HomeController@home')->name('home');
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/transcribe', 'TaskController@transcribe')->name('transcribe');
-    Route::get('/validate', 'TaskController@validate_transcription')->name('validate');
-    Route::get('/profile', 'HomeController@profile')->name('profile');
-    Route::group(['middleware' => ['admin']], function () {
-        Route::get('/audio', 'AudioController@audio')->name('audio.list');
-        Route::get('/audio/upload', 'AudioController@add')->name('audio.add');
-        Route::post('/audio/upload', 'AudioController@upload')->name('audio.upload');
+    Route::group(['middleware' => ['auth', 'web']], function () {
+        Route::get('/transcribe', 'TaskController@transcribe')->name('transcribe');
+        Route::post('/transcribe', 'TaskController@transcribe_save')->name('transcribe.save');
+        Route::get('/transcribe/skip', 'TaskController@transcribe_skip')->name('transcribe.skip');
+
+        Route::get('/validate', 'TaskController@validate_transcription')->name('validate');
+        Route::post('/validate', 'TaskController@validate_transcription_save')->name('validate.save');
+        Route::get('/profile', 'HomeController@profile')->name('profile');
+        Route::group(['middleware' => ['admin']], function () {
+            Route::get('/audio', 'AudioController@audio')->name('audio.list');
+            Route::get('/audio/upload', 'AudioController@add')->name('audio.add');
+            Route::post('/audio/upload', 'AudioController@upload')->name('audio.upload');
+        });
     });
 });
 

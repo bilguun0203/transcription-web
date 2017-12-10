@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Prototype - Audio')
+@section('title', 'Transcribe - Task ' . $result->id)
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/plyr.css') }}">
@@ -19,29 +19,41 @@
                             </button>
                             <strong>Санамж!</strong> Cum ratione volare, omnes fideses aperto bi-color, fidelis amicitiaes.
                         </div>
+                        @if($errors->has('task_id'))
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                    <span class="sr-only">Хаах</span>
+                                </button>
+                                <strong>Алдаа!</strong> {{ $errors->first('task_id') }}
+                            </div>
+                        @endif
+                        @if($errors->has('transcription'))
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                    <span class="sr-only">Хаах</span>
+                                </button>
+                                <strong>Алдаа!</strong> {{ $errors->first('transcription') }}
+                            </div>
+                        @endif
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Файл - audio2.wav</h4>
-                                <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
-                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                                <!--<a href="#" class="card-link">Card link</a>-->
-                                <!--<a href="#" class="card-link">Another link</a>-->
+                                <h4 class="card-title">Даалгавар - {{ $result->id }}</h4>
                                 <audio data-plyr='{ "autoplay":true }' controls>
-                                    <source src="{{ asset('audio_files/agent-9009-1468979090-74251.wav') }}" type="audio/mp3">
-                                    <!--<source src="/path/to/audio.ogg" type="audio/ogg">-->
+                                    <source src="{{ asset($result->audio->file) }}" type="audio/wav">
                                 </audio>
-                                <form>
+                                <form action="{{ route('transcribe.save') }}" method="post">
                                     {{ csrf_field() }}
+                                    <input type="hidden" name="task_id" class="form-control" value="{{ $result->id }}">
                                     <div class="form-group">
-                                        <label for="text" class="bmd-label-floating">Text</label>
-                                        <input type="text" class="form-control" id="text" required autofocus>
-                                        <span class="bmd-help">...</span>
+                                        <label for="transcription" class="bmd-label-floating">Энд бичнэ үү</label>
+                                        <textarea class="form-control" rows="3" maxlength="255" id="transcription" name="transcription" required autofocus>{{ old('transcription') }}</textarea>
+                                        <span class="bmd-help">Криллээр бичнэ үү.</span>
                                     </div>
                                     <br>
-                                    {{--<a href="#prev" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="audio1.wav"><i class="far fa-arrow-left"></i> Өмнөх</a>--}}
-                                    {{--<a href="#next" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="audio3.wav">Дараах <i class="far fa-arrow-right"></i></a>--}}
-                                    <a href="#skip" class="btn btn-outline-danger">Алгасах <i class="far fa-arrow-right"></i></a>
-                                    <!--<button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('text').value = '';document.getElementById('text').focus()">Арилгах</button>-->
+                                    <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('transcription').value = '';document.getElementById('transcription').focus()">Арилгах</button>
+                                    <a href="{{ route('transcribe.skip') }}" class="btn btn-outline-danger">Алгасах <i class="far fa-arrow-right"></i></a>
                                     <div class="float-right">
                                         <button type="submit" class="btn btn-raised btn-info" data-toggle="tooltip" data-placement="top" title="Хадгалаад дараагийн файл руу шилжих"><i class="far fa-save"></i> Хадгалах</button>
                                     </div>

@@ -87,6 +87,7 @@ return [
     'unique'               => 'The :attribute has already been taken.',
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
+    'cyrillic'             => 'The :attribute must be a cyrillic',
 
     /*
     |--------------------------------------------------------------------------
@@ -116,6 +117,12 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email' => 'E-Mail Address',
+        'name' => 'Name',
+        'transcription' => 'Transcription',
+        'password' => 'Password',
+        'validation' => 'Validation',
+    ],
 
 ];

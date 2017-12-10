@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-all.min.css') }}">
     @show
 
-    <title>@yield('title')</title>
+    <title>Transcription Web - @yield('title')</title>
 </head>
 <body>
 

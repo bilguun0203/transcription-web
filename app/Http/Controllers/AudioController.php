@@ -27,27 +27,33 @@ class AudioController extends TController
     }
 
     public function upload(Request $request){
+
         $audiofile = $request->file('audiofile');
-        $audioprop = [
-            'filename' => $audiofile->getClientOriginalName(),
-            'size' => $audiofile->getSize()
-        ];
-        $audioName = pathinfo($audiofile->getClientOriginalName(), PATHINFO_FILENAME);
-        $newAudioName = $audioName . '-' . str_random(4) . '.' . $audiofile->extension();
+        if($audiofile->extension() == 'wav') {
+            $audioprop = [
+                'filename' => $audiofile->getClientOriginalName(),
+                'size' => $audiofile->getSize()
+            ];
+            $audioName = pathinfo($audiofile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newAudioName = $audioName . '-' . str_random(4) . '.' . $audiofile->extension();
 
-        $date = new DateTime();
-        $ts = $date->getTimestamp();
+            $date = new DateTime();
+            $ts = $date->getTimestamp();
 
-        $dir = 'audio_files/' . ($ts % 1000);
-        if(!is_dir(public_path($dir))){
-            File::makeDirectory(public_path($dir));
+            $dir = 'audio_files/' . ($ts % 1000);
+            if (!is_dir(public_path($dir))) {
+                File::makeDirectory(public_path($dir), 0775);
+            }
+            $audiofile->move($dir, $newAudioName);
+            $uploaded_audio = Audio::create(['file' => $dir . '/' . $newAudioName]);
+
+            $audioprop['newname'] = $newAudioName;
+            $audioprop['id'] = $uploaded_audio->id;
+            return response()->json(array('audiofile' => $audioprop), 200);
         }
-        $audiofile->move($dir, $newAudioName);
-        $uploaded_audio = Audio::create(['file' => $dir. '/' . $newAudioName]);
-
-        $audioprop['newname'] = $newAudioName;
-        $audioprop['id'] = $uploaded_audio->id;
-        return response()->json(array('audiofile' => $audioprop), 200);
+        else {
+            return response()->json(false, 200);
+        }
     }
 
 }
