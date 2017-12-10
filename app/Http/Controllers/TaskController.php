@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use \App\Task;
 
 class TaskController extends TController
 {

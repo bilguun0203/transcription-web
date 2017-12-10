@@ -19,13 +19,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/profile', 'HomeController@profile')->name('profile');
     Route::group(['middleware' => ['admin']], function () {
         Route::get('/audio', 'AudioController@audio')->name('audio.list');
-        Route::get('/audio/upload', 'AudioController@add')->name('audio.upload');
+        Route::get('/audio/upload', 'AudioController@add')->name('audio.add');
+        Route::post('/audio/upload', 'AudioController@upload')->name('audio.upload');
     });
 });
 
-//Route::get('protected', ['middleware' => ['auth', 'admin']], function () {
-//});
-
 Auth::routes();
-
-//Route::get('/home', 'HomeController@index')->name('home');

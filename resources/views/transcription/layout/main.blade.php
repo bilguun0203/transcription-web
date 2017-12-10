@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @section('stylesheet')
     <!-- Material Design for Bootstrap fonts and icons -->
@@ -44,7 +45,7 @@
                     @auth
                         @if(Auth::user()->isAdmin())
                             <a class="dropdown-item" href="{{ route('audio.list') }}">Аудио файлууд</a>
-                            <a class="dropdown-item" href="{{ route('audio.upload') }}">Файл нэмэх</a>
+                            <a class="dropdown-item" href="{{ route('audio.add') }}">Файл нэмэх</a>
                         @endif
                     @endauth
                 </div>
@@ -84,7 +85,7 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
 @yield('additional_scripts')
@@ -92,6 +93,9 @@
     $(document).ready(function() {
         $('body').bootstrapMaterialDesign();
         $('[data-toggle="tooltip"]').tooltip();
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
     });
 </script>
 @show
