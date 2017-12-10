@@ -52,13 +52,13 @@
                                 <audio data-plyr='{ "autoplay":true }' controls>
                                     <source src="{{ asset($task->audio->file) }}" type="audio/wav">
                                 </audio>
-                                <div class="alert alert-info">{{ $transcribed->transcription }}</div>
+                                <div class="alert alert-info"><strong>Бичвэр:</strong> {{ $transcribed->transcription }}</div>
                                 <form method="post" action="{{ route('validate.save') }}">
                                     {{ csrf_field() }}
                                     <input type="hidden" value="{{ $task->id }}" name="task_id" class="form-control">
                                     <input type="hidden" value="{{ $transcribed->id }}" name="transcription_id" class="form-control">
                                     <div class="text-center">
-                                        <button type="submit" name="validation" value="d" class="btn btn-raised btn-danger" data-toggle="tooltip" data-placement="top" title="Аудио файлд ярьж буй яриа болон бичвэртэй таарахгүй байна"><i class="far fa-times"></i> Зөвшөөрөхгүй</button>
+                                        <button type="submit" name="validation" value="d" class="btn btn-raised btn-danger" data-toggle="tooltip" data-placement="top" title="Аудио файлд ярьж буй яриа нь бичвэртэй таарахгүй байна"><i class="far fa-times"></i> Зөвшөөрөхгүй</button>
                                         <button type="submit" name="validation" value="a" class="btn btn-raised btn-success" data-toggle="tooltip" data-placement="top" title="Аудио файлд ярьж буй яриа, бичвэр хоёр тохирч байна"><i class="far fa-check"></i> Зөвшөөрөх</button>
                                     </div>
                                 </form>

@@ -21,7 +21,7 @@
         </div>
         @endif
         <div class="row justify-content-center mt-5">
-            <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
                 <div class="card">
                     <div class="card-body">
                         <p>Аудио файл дахь яриаг бичвэр болгох.</p>
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
                 <div class="card">
                     <div class="card-body">
                         <p>Бичвэр болгосон яриаг сонсож таарч байгаа эсэхийг шалгах.</p>
@@ -49,7 +49,7 @@
                     <h2>Удирдах хэсэг</h2>
                 </div>
                 <div class="row justify-content-center mt-5">
-                    <div class="col-md-3 col-sm-4 col-xs-6">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
                         <div class="card">
                             <div class="card-body">
                                 <p>Бүх аудио файлуудыг удирдах.</p>
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-4 col-xs-6">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
                         <div class="card">
                             <div class="card-body">
                                 <p>Шинэ аудио файл нэмэх.</p>

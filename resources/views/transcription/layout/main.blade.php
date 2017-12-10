@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mn">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,7 +8,7 @@
 
     @section('stylesheet')
     <!-- Material Design for Bootstrap fonts and icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;subset=cyrillic,cyrillic-ext" rel="stylesheet">
 
     <!-- Material Design for Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-material-design.min.css') }}">
@@ -61,7 +61,7 @@
                         <i class="far fa-user"></i> {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a href="{{ route('profile') }}" class="dropdown-item">Миний булан</a>
+                        {{--<a href="{{ route('profile') }}" class="dropdown-item">Миний булан</a>--}}
                         <div>
                             <a href="{{ route('logout') }}" class="dropdown-item"
                                onclick="event.preventDefault();document.getElementById('logout-form').submit();">Гарах
