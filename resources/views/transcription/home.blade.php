@@ -29,33 +29,35 @@
                 </div>
             </div>
         </div>
-        @if(Auth::user()->permission == 'admin')
-            <hr>
-            <div class="text-center">
-                <h2>Удирдах хэсэг</h2>
-            </div>
-            <div class="row justify-content-center mt-5">
-                <div class="col-md-3 col-sm-4 col-xs-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p>Бүх аудио файлуудыг удирдах.</p>
+        @auth
+            @if(Auth::user()->isAdmin())
+                <hr>
+                <div class="text-center">
+                    <h2>Удирдах хэсэг</h2>
+                </div>
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-3 col-sm-4 col-xs-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Бүх аудио файлуудыг удирдах.</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ route('audio.list') }}" class="btn btn-primary btn-block btn-raised"><i class="far fa-file-audio"></i> Аудио файлууд</a>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <a href="{{ route('audio.list') }}" class="btn btn-primary btn-block btn-raised"><i class="far fa-file-audio"></i> Аудио файлууд</a>
+                    </div>
+                    <div class="col-md-3 col-sm-4 col-xs-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Шинэ аудио файл нэмэх.</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ route('audio.upload') }}" class="btn btn-info btn-block btn-raised"><i class="far fa-upload"></i> Файл нэмэх</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-4 col-xs-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p>Шинэ аудио файл нэмэх.</p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('audio.upload') }}" class="btn btn-info btn-block btn-raised"><i class="far fa-upload"></i> Файл нэмэх</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
+            @endif
+        @endauth
     </div>
 @endsection

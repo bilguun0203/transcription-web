@@ -13,7 +13,7 @@ class HomeController extends TController
 {
 
     public function home(){
-        return view('transcription.index');
+        return view('transcription.home');
     }
 
     public function profile(){

@@ -11,17 +11,20 @@
 |
 */
 
-Route::get('/', 'HomeController@home')->name('index');
+Route::get('/', 'HomeController@home')->name('home');
 
-Route::get('/transcribe', 'TaskController@transcribe')->name('transcribe');
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/transcribe', 'TaskController@transcribe')->name('transcribe');
+    Route::get('/validate', 'TaskController@validate_transcription')->name('validate');
+    Route::get('/profile', 'HomeController@profile')->name('profile');
+    Route::group(['middleware' => ['admin']], function () {
+        Route::get('/audio', 'AudioController@audio')->name('audio.list');
+        Route::get('/audio/upload', 'AudioController@add')->name('audio.upload');
+    });
+});
 
-Route::get('/validate', 'TaskController@validate_transcription')->name('validate');
-
-Route::get('/profile', 'HomeController@profile')->name('profile');
-
-Route::get('/audio', 'AudioController@audio')->name('audio.list');
-
-Route::get('/audio/upload', 'AudioController@add')->name('audio.upload');
+//Route::get('protected', ['middleware' => ['auth', 'admin']], function () {
+//});
 
 Auth::routes();
 

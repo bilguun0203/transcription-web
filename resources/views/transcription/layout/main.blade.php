@@ -24,7 +24,7 @@
 
 @section('navbar')
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
-    <a class="navbar-brand" href="{{ route('index') }}"><i class="far fa-music"></i> <i class="far fa-arrow-right"></i> <i class="far fa-font"></i></a>
+    <a class="navbar-brand" href="{{ route('home') }}"><i class="far fa-music"></i> <i class="far fa-arrow-right"></i> <i class="far fa-font"></i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="{{ route('index') }}">Нүүр</a>
+                <a class="nav-link" href="{{ route('home') }}">Эхлэл</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,10 +41,12 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('transcribe') }}">Бичвэрт буулгах</a>
                     <a class="dropdown-item" href="{{ route('validate') }}">Шалгах</a>
-                    @if(Auth::user()->permission == 'admin')
-                        <a class="dropdown-item" href="{{ route('audio.list') }}">Аудио файлууд</a>
-                        <a class="dropdown-item" href="{{ route('audio.upload') }}">Файл нэмэх</a>
-                    @endif
+                    @auth
+                        @if(Auth::user()->isAdmin())
+                            <a class="dropdown-item" href="{{ route('audio.list') }}">Аудио файлууд</a>
+                            <a class="dropdown-item" href="{{ route('audio.upload') }}">Файл нэмэх</a>
+                        @endif
+                    @endauth
                 </div>
             </li>
         </ul>
