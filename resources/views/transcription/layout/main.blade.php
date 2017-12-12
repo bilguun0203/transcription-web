@@ -35,21 +35,14 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{{ route('home') }}">Эхлэл</a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Хуудаснууд
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{{ route('transcribe') }}">Бичвэрт буулгах</a>
-                    <a class="dropdown-item" href="{{ route('validate') }}">Шалгах</a>
-                    @auth
-                        @if(Auth::user()->isAdmin())
-                            <a class="dropdown-item" href="{{ route('audio.list') }}">Аудио файлууд</a>
-                            <a class="dropdown-item" href="{{ route('audio.add') }}">Файл нэмэх</a>
-                        @endif
-                    @endauth
-                </div>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('transcribe') }}">Бичвэрт буулгах</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('validate') }}">Шалгах</a></li>
+            @auth
+                @if(Auth::user()->isAdmin())
+                    <li class="nav-item"><a class="nav-link" href="{{ route('audio.list') }}">Аудио файлууд</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('audio.add') }}">Файл нэмэх</a></li>
+                @endif
+            @endauth
         </ul>
         <ul class="navbar-nav ml-auto">
             @guest
