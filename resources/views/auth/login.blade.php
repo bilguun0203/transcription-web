@@ -7,6 +7,15 @@
         <!--<div class="row">-->
         <div class="row justify-content-center mt-5">
             <div class="col-md-5 col-sm-8 col-xs-12">
+                @foreach($errors->all() as $error)
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                            <span class="sr-only">Хаах</span>
+                        </button>
+                        {{ $error }}
+                    </div>
+                @endforeach
                 <div class="card">
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         <div class="card-body">

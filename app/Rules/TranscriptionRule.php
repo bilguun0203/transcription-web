@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class Cyrillic implements Rule
+class TranscriptionRule implements Rule
 {
     /**
      * Create a new rule instance.
@@ -25,7 +25,7 @@ class Cyrillic implements Rule
      */
     public function passes($attribute, $value)
     {
-        return preg_match_all('/[А-Яа-яЁёӨөҮү ]+/', $value);
+        return preg_match_all('/(^(#D)?[А-Яа-яЁёӨөҮү \.\*!\?,\.\(\)~\$%#<>GN-]{1,255}$)/u', $value);
     }
 
     /**
@@ -35,7 +35,6 @@ class Cyrillic implements Rule
      */
     public function message()
     {
-        return trans('validation.cyrillic');
-//        return 'The :attribute must be cyrillic.';
+        return trans('validation.transcription');
     }
 }

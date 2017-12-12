@@ -87,7 +87,8 @@ return [
     'unique'               => 'The :attribute has already been taken.',
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
-    'cyrillic'             => 'The :attribute must be a cyrillic',
+    'transcription'             => 'The :attribute must follow transcription rule',
+    'sisiid'             => 'The :attribute must be a Sisi ID',
 
     /*
     |--------------------------------------------------------------------------

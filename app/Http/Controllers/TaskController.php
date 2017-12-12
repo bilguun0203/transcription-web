@@ -8,12 +8,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\Cyrillic;
+use App\Rules\TranscriptionRule;
 use \App\Task;
 use App\TaskTranscribed;
 use App\TaskValidated;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use \Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +59,7 @@ class TaskController extends TController
      */
     public function transcribe_save(Request $request){
         $validatedData = $request->validate([
-            'transcription' => ['required', 'max:255'],
+            'transcription' => ['required', 'max:255', new TranscriptionRule],
             'task_id' => ['required']
         ]);
         $task = Task::find($request->input('task_id'));

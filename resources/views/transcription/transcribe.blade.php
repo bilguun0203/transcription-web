@@ -17,26 +17,17 @@
                                 <span aria-hidden="true"><i class="fal fa-times"></i></span>
                                 <span class="sr-only">Хаах</span>
                             </button>
-                            <strong>Санамж!</strong> Cum ratione volare, omnes fideses aperto bi-color, fidelis amicitiaes.
+                            <strong>Санамж!</strong> /(^(#D)?[А-Яа-яЁёӨөҮү \.\*!\?,\.\(\)~\$%#<>GN-]{1,255}$)/u
                         </div>
-                        @if($errors->has('task_id'))
+                        @foreach($errors->all() as $error)
                             <div class="alert alert-danger">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                                     <span class="sr-only">Хаах</span>
                                 </button>
-                                <strong>Алдаа!</strong> {{ $errors->first('task_id') }}
+                                {{ $error }}
                             </div>
-                        @endif
-                        @if($errors->has('transcription'))
-                            <div class="alert alert-danger">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                                    <span class="sr-only">Хаах</span>
-                                </button>
-                                <strong>Алдаа!</strong> {{ $errors->first('transcription') }}
-                            </div>
-                        @endif
+                        @endforeach
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Даалгавар - {{ $result->id }}</h4>

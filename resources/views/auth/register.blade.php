@@ -7,14 +7,22 @@
         <!--<div class="row">-->
         <div class="row justify-content-center mt-5">
             <div class="col-md-5 col-sm-8 col-xs-12">
+                @foreach($errors->all() as $error)
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                            <span class="sr-only">Хаах</span>
+                        </button>
+                        {{ $error }}
+                    </div>
+                @endforeach
                 <div class="card">
                     <form class="form-horizontal" method="POST" action="{{ route('register') }}">
                         <div class="card-body">
                             <h4 class="card-title">Бүртгүүлэх</h4>
                             {{ csrf_field() }}
-
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="bmd-label-floating"><i class="far fa-user"></i> Хэрэглэгчийн нэр /ID/</label>
+                                <label for="name" class="bmd-label-floating"><i class="far fa-user"></i> Хэрэглэгчийн нэр /Sisi ID/</label>
                                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name" value="{{ old('name') }}" required autofocus>
                                 @if ($errors->has('name'))
                                     <small class="bmd-help">{{ $errors->first('name') }}</small>
