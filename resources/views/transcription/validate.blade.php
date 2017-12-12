@@ -53,6 +53,7 @@
                                     <source src="{{ asset($task->audio->file) }}" type="audio/wav">
                                 </audio>
                                 <div class="alert alert-info"><strong>Бичвэр:</strong> {{ $transcribed->transcription }}</div>
+                                <p class="text-muted">{{ $transcribed->user->name }} {{ $transcribed->user->email }}</p>
                                 <form method="post" action="{{ route('validate.save') }}">
                                     {{ csrf_field() }}
                                     <input type="hidden" value="{{ $task->id }}" name="task_id" class="form-control">

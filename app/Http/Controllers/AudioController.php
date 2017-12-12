@@ -9,6 +9,8 @@
 namespace App\Http\Controllers;
 
 use \App\Audio;
+use App\Task;
+use App\TaskTranscribed;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -18,7 +20,27 @@ class AudioController extends TController
 {
 
     public function audio(){
-
+        $ttask = TaskTranscribed::find(10);
+        dump($ttask->getTotalValidation());
+        dump($ttask->getNumberOfAccepted());
+        dump($ttask->getNumberOfDeclined());
+        dump($ttask->getValidationStatus());
+//        $task = Task::find(11);
+//        dump($task->getNotValidated());
+//        $task = Task::find(11);
+//        if($task->transcribed[0]->validated->isNotEmpty()){
+//            echo "validated";
+//        }
+//        else {
+//            echo "not validated";
+//        }
+//        $task = Task::find(9);
+//        if($task->transcribed[0]->validated->isNotEmpty()){
+//            echo "validated";
+//        }
+//        else {
+//            echo "not validated";
+//        }
         return view('transcription.audio_list');
     }
 

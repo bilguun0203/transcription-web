@@ -37,14 +37,7 @@ class Task extends Model
 
     public function getLatestTranscribed()
     {
-        $task = $this;
-        if($this->type == 'v'){
-            foreach ($this->audio->tasks as $item){
-                if($item->type == 't'){
-                    $task = $item;
-                }
-            }
-        }
+        $task = $this->getTTask();
         return $task->transcribed->sortByDesc('created_at')->first();
     }
 
@@ -56,8 +49,14 @@ class Task extends Model
 
     public function getNotValidated()
     {
-        $task = $this->getTTask();
-        return $task->transcribed->sortByDesc('created_at')->first();
+        $task = TaskTranscribed::where('task_id', $this->id)->has('validated')->get();
+//        $task = $this->getTTask()->transcribed()->has('validated')->get();
+//        $task->transcribed = $task->transcribed();
+//        $task->transcribed = $task->transcribed->filter(function($transcribed)
+//        {
+//            return $transcribed->validated->isNotEmpty();
+//        });
+        return $task->sortByDesc('created_at');
     }
 
     public function getTTask()
@@ -82,5 +81,15 @@ class Task extends Model
             }
         }
         return $this;
+    }
+
+    public function isAlreadyTranscribed($user_id = 0) {
+        $user_id = $user_id == 0 ? Auth::user()->id : $user_id;
+        foreach ($this->transcribed as $item){
+            if($item->user_id == $user_id){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -18,7 +18,7 @@ class Audio extends Model
 
         self::created(function ($model) {
             Task::create(['audio_id' => $model->id, 'type' => 't', 'status' => 1]);
-            Task::create(['audio_id' => $model->id, 'type' => 'v', 'status' => 0]);
+            Task::create(['audio_id' => $model->id, 'type' => 'v', 'status' => -1]);
         });
     }
 

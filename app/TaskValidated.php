@@ -25,19 +25,21 @@ class TaskValidated extends Model
         });
         self::created(function ($model) {
             $model->task->user_id = null;
-            $model->task->status = 0;
+            $model->task->status = $model->transcribed->getTotalValidation();
             $model->task->save();
-            if($model->validation_status == 'd') {
-                $task = $model->task->getTTask();
-                $task->status = 1;
-                $task->save();
+            if($model->transcribed->getTotalValidation() == env('VALIDATION_COUNT')){
+                if($model->transcribed->getValidationStatus() < 0){
+                    $model->task->getTTask()->status = 1;
+                    $model->task->getTTask()->save();
+                }
             }
         });
 
         self::deleting(function ($model) {
-            if($model->task->validated->count() == 1){
-                $model->task->status = 1;
-                $model->task->status = 1;
+            $latest = $model->task->getLatestTranscribed();
+            if($latest->id == $model->transcribed->id) {
+                $model->task->status = $model->transcribed->getTotalValidation();
+                $model->task->save();
             }
         });
     }
