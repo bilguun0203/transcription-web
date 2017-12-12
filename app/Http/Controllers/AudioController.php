@@ -20,11 +20,11 @@ class AudioController extends TController
 {
 
     public function audio(){
-        $ttask = TaskTranscribed::find(10);
-        dump($ttask->getTotalValidation());
-        dump($ttask->getNumberOfAccepted());
-        dump($ttask->getNumberOfDeclined());
-        dump($ttask->getValidationStatus());
+//        $ttask = TaskTranscribed::find(10);
+//        dump($ttask->getTotalValidation());
+//        dump($ttask->getNumberOfAccepted());
+//        dump($ttask->getNumberOfDeclined());
+//        dump($ttask->getValidationStatus());
 //        $task = Task::find(11);
 //        dump($task->getNotValidated());
 //        $task = Task::find(11);
