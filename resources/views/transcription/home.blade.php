@@ -20,6 +20,7 @@
             </div>
         </div>
         @endif
+
         <div class="row justify-content-center mt-5">
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
                 <div class="card">
@@ -31,6 +32,30 @@
                     </div>
                 </div>
             </div>
+            @auth
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
+                <div class="card">
+                    <div class="card-header">
+                        Тоон үзүүлэлт
+                    </div>
+                    <div class="card-body">
+                        <h6>Бичвэр болгосон</h6>
+                        <ul>
+                            <li>Нийт: {{ $statust['a'] + $statust['d'] + $statust['p'] }}</li>
+                            <li>Зөвшөөрөгдсөн: {{ $statust['a'] }}</li>
+                            <li>Зөвшөөрөөгүй: {{ $statust['d'] }}</li>
+                            <li>Хүлээгдэж байгаа: {{ $statust['p'] }}</li>
+                        </ul>
+                        <h6>Шалгасан</h6>
+                        <ul>
+                            <li>Нийт: {{ $statusv['a'] + $statusv['d'] }}</li>
+                            <li>Зөв: {{ $statusv['a'] }}</li>
+                            <li>Буруу: {{ $statusv['d'] }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            @endauth
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
                 <div class="card">
                     <div class="card-body">
