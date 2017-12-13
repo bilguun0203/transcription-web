@@ -23,6 +23,8 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/validate', 'TaskController@validate_transcription')->name('validate');
         Route::post('/validate', 'TaskController@validate_transcription_save')->name('validate.save');
         Route::get('/profile', 'HomeController@profile')->name('profile');
+        Route::post('/profile/info', 'HomeController@profile_save')->name('profile.info');
+        Route::post('/profile/password', 'HomeController@profile_change_password')->name('profile.password');
         Route::group(['middleware' => ['admin']], function () {
             Route::get('/audio', 'AudioController@audio')->name('audio.list');
             Route::get('/audio/upload', 'AudioController@add')->name('audio.add');
