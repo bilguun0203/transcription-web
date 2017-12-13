@@ -64,7 +64,7 @@ class HomeController extends TController
 
     public function profile_save(Request $request){
         $validatedData = $request->validate([
-            'name' => ['required','string','max:255', new SisiID],
+            'name' => ['required','string','max:255', new SisiID, Rule::unique('users')->ignore(Auth::user()->id)],
             'email' => ['required','string','email','max:255',Rule::unique('users')->ignore(Auth::user()->id)],
         ]);
         $user = User::findOrFail(Auth::user()->id);
