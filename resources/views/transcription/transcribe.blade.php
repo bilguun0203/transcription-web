@@ -4,6 +4,7 @@
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/plyr.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/summernote-bs4.css') }}">
 @endsection
 
 @section('content')
@@ -37,11 +38,12 @@
                                 <form action="{{ route('transcribe.save') }}" method="post">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="task_id" class="form-control" value="{{ $result->id }}">
-                                    <div class="form-group">
-                                        <label for="transcription" class="bmd-label-floating">Энд бичнэ үү</label>
-                                        <textarea class="form-control" rows="3" maxlength="255" id="transcription" name="transcription" required autofocus>{{ old('transcription') }}</textarea>
-                                        <span class="bmd-help">Криллээр бичнэ үү.</span>
-                                    </div>
+                                    <textarea class="form-control transcription" name="transcription">{{ old('transcription') }}</textarea>
+                                    {{--<div class="form-group">--}}
+                                        {{--<label for="transcription" class="bmd-label-floating">Энд бичнэ үү</label>--}}
+                                        {{--<textarea class="form-control" rows="3" maxlength="255" id="transcription" name="transcription" required autofocus>{{ old('transcription') }}</textarea>--}}
+                                        {{--<span class="bmd-help">Криллээр бичнэ үү.</span>--}}
+                                    {{--</div>--}}
                                     <br>
                                     <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('transcription').value = '';document.getElementById('transcription').focus()">Арилгах</button>
                                     {{--<a href="{{ route('transcribe.skip') }}" class="btn btn-outline-danger">Алгасах <i class="far fa-arrow-right"></i></a>--}}
@@ -64,9 +66,22 @@
 @section('scripts')
     @parent
     <script src="{{ asset('assets/js/plyr.js') }}"></script>
+    <script src="{{ asset('assets/js/summernote-bs4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             plyr.setup();
+            $('.transcription').summernote({
+                placeholder: 'Энд бичвэрээ оруулна уу...',
+                height: 200,
+                minHeight: 200,
+                maxHeight: null,
+                focus: true,
+                toolbar: [
+                    ['','']
+                ],
+                popover: {}
+            });
+            $(".note-toolbar").hide();
         });
     </script>
 @endsection

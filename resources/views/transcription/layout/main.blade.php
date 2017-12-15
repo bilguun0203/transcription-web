@@ -79,18 +79,18 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
-<script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
-@yield('additional_scripts')
-<script>
-    $(document).ready(function() {
-        $('body').bootstrapMaterialDesign();
-        $('[data-toggle="tooltip"]').tooltip();
-        $.ajaxSetup({
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+    <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
+    @yield('additional_scripts')
+    <script>
+        $(document).ready(function() {
+            $('body').bootstrapMaterialDesign();
+            $('[data-toggle="tooltip"]').tooltip();
+            $.ajaxSetup({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+            });
         });
-    });
-</script>
+    </script>
 @show
 </body>
 </html>
