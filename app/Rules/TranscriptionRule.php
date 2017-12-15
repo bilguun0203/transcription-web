@@ -25,7 +25,7 @@ class TranscriptionRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return preg_match_all('/(^(#D)?[А-Яа-яЁёӨөҮү \.\*!\?,\.\(\)~\$%#<>GN-p\/]{1,255}$)/u', $value);
+        return preg_match_all(env('TRANSCRIPTION_RULE'), $value);
     }
 
     /**
