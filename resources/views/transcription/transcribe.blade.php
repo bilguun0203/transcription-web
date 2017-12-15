@@ -33,7 +33,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Даалгавар - {{ $result->id }}</h4>
                                 <audio data-plyr='{ "autoplay":true }' controls>
-                                    <source src="{{ asset($result->audio->file) }}" type="audio/wav">
+                                    <source src="@if($result->audio->isLocal){{ asset($result->audio->url .  $result->audio->file) }}@else{{ $result->audio->url . $result->audio->file }}@endif" type="audio/wav">
                                 </audio>
                                 <form action="{{ route('transcribe.save') }}" method="post">
                                     {{ csrf_field() }}

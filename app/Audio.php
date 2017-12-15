@@ -9,7 +9,8 @@ class Audio extends Model
     protected $table = 'audio';
 
     protected $fillable = [
-        'file'
+        'file',
+        'url'
     ];
 
     public static function boot()

@@ -67,7 +67,7 @@ class AudioController extends TController
                 File::makeDirectory(public_path($dir), 0775);
             }
             $audiofile->move($dir, $newAudioName);
-            $uploaded_audio = Audio::create(['file' => $dir . '/' . $newAudioName]);
+            $uploaded_audio = Audio::create(['file' => $newAudioName, 'url' => $dir . '/']);
 
             $audioprop['newname'] = $newAudioName;
             $audioprop['id'] = $uploaded_audio->id;
