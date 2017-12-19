@@ -20,8 +20,8 @@ class CreateTaskTranscribedTable extends Migration
             $table->string('transcription')->nullable(false);
             $table->timestamps();
 
-            $table->foreign('task_id')->references('id')->on('task');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('task_id')->references('id')->on('task')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }
 

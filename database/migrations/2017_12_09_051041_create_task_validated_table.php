@@ -21,9 +21,9 @@ class CreateTaskValidatedTable extends Migration
             $table->char('validation_status', 1)->nullable(false);
             $table->timestamps();
 
-            $table->foreign('task_id')->references('id')->on('task');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('task_transcribed_id')->references('id')->on('task_transcribed');
+            $table->foreign('task_id')->references('id')->on('task')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('task_transcription_id')->references('id')->on('task_transcribed')->onDelete('cascade');
         });
     }
 

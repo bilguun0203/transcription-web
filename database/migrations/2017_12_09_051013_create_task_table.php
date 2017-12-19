@@ -21,8 +21,8 @@ class CreateTaskTable extends Migration
             $table->char('status', 1)->nullable(false);
             $table->timestamps();
 
-            $table->foreign('audio_id')->references('id')->on('audio');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('audio_id')->references('id')->on('audio')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }
 
