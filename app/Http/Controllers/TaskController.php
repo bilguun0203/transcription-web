@@ -59,7 +59,7 @@ class TaskController extends TController
      */
     public function transcribe_save(Request $request){
         $validatedData = $request->validate([
-            'transcription' => ['required', 'max:255', new TranscriptionRule],
+            'transcription' => ['required', 'max:5000', new TranscriptionRule],
             'task_id' => ['required']
         ]);
         $task = Task::find($request->input('task_id'));

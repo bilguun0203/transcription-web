@@ -18,7 +18,7 @@
                                 <span aria-hidden="true"><i class="fal fa-times"></i></span>
                                 <span class="sr-only">Хаах</span>
                             </button>
-                            <strong>Санамж!</strong> /(^(#D)?[А-Яа-яЁёӨөҮү \.\*!\?,\.\(\)~\$%#<>GN-]{1,255}$)/u
+                            <strong>Санамж!</strong> {{ env('TRANSCRIPTION_RULE') }}
                         </div>
                         @foreach($errors->all() as $error)
                             <div class="alert alert-danger">
