@@ -32,7 +32,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Даалгавар - {{ $task->id }}</h4>
                                 <audio data-plyr='{ "autoplay":true }' controls>
-                                    <source src="{{ asset($task->audio->file) }}" type="audio/wav">
+                                    <source src="@if($result->audio->isLocal){{ asset($result->audio->url .  $result->audio->file) }}@else{{ $result->audio->url . $result->audio->file }}@endif" type="audio/wav">
                                 </audio>
                                 <div class="alert alert-info"><strong>Бичвэр:</strong> {{ $transcribed->transcription }}</div>
                                 <form method="post" action="{{ route('validate.save') }}">
