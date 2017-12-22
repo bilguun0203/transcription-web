@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Бичвэрт буулгах - ' . $result->id)
+@section('title', 'Бичвэрт буулгах - ' . $task->id)
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/plyr.css') }}">
@@ -31,17 +31,12 @@
                         @endforeach
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Даалгавар - {{ $result->id }}</h4>
-                                <audio data-plyr='{ "autoplay":true }' controls src="@if($result->audio->isLocal){{ asset($result->audio->url .  $result->audio->file) }}@else{{ $result->audio->url . $result->audio->file }}@endif" type="audio/wav"></audio>
+                                <h4 class="card-title">Даалгавар - {{ $task->id }}</h4>
+                                <audio data-plyr='{ "autoplay":true }' controls src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . $task->audio->file }}@endif" type="audio/wav"></audio>
                                 <form action="{{ route('transcribe.save') }}" method="post">
                                     {{ csrf_field() }}
-                                    <input type="hidden" name="task_id" class="form-control" value="{{ $result->id }}">
+                                    <input type="hidden" name="task_id" class="form-control" value="{{ $task->id }}">
                                     <textarea class="form-control transcription" name="transcription">{{ old('transcription') }}</textarea>
-                                    {{--<div class="form-group">--}}
-                                        {{--<label for="transcription" class="bmd-label-floating">Энд бичнэ үү</label>--}}
-                                        {{--<textarea class="form-control" rows="3" maxlength="255" id="transcription" name="transcription" required autofocus>{{ old('transcription') }}</textarea>--}}
-                                        {{--<span class="bmd-help">Криллээр бичнэ үү.</span>--}}
-                                    {{--</div>--}}
                                     <br>
                                     <button type="button" class="btn btn-outline-secondary" onclick="clear_transcription()">Арилгах</button>
                                     {{--<a href="{{ route('transcribe.skip') }}" class="btn btn-outline-danger">Алгасах <i class="far fa-arrow-right"></i></a>--}}

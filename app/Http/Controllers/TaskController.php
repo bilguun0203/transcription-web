@@ -46,7 +46,7 @@ class TaskController extends TController
         if($found) {
             return view('transcription.transcribe',
                 [
-                    'result' => $result
+                    'task' => $result
                 ]);
         }
         return redirect()->route('home')->with('msg', 'Бичвэр болгох боломжтой аудио файл олдсонгүй. Дараа дахин шалгана уу.');

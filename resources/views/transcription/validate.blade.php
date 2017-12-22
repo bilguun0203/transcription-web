@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Шалгах')
+@section('title', 'Шалгах - ' . $task->id)
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/plyr.css') }}">
