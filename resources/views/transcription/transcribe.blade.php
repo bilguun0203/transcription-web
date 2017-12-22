@@ -45,7 +45,7 @@
                                         {{--<span class="bmd-help">Криллээр бичнэ үү.</span>--}}
                                     {{--</div>--}}
                                     <br>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('transcription').value = '';document.getElementById('transcription').focus()">Арилгах</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="clear_transcription()">Арилгах</button>
                                     {{--<a href="{{ route('transcribe.skip') }}" class="btn btn-outline-danger">Алгасах <i class="far fa-arrow-right"></i></a>--}}
                                     <div class="float-right">
                                         <button type="submit" class="btn btn-raised btn-info" data-toggle="tooltip" data-placement="top" title="Хадгалаад дараагийн файл руу шилжих"><i class="far fa-save"></i> Хадгалах</button>
@@ -83,5 +83,9 @@
             });
             $(".note-toolbar").hide();
         });
+        function clear_transcription(){
+            $('.transcription').summernote('code', '');
+            $('.transcription').summernote('focus');
+        }
     </script>
 @endsection
