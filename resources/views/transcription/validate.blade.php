@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Prototype - Audio')
+@section('title', 'Шалгах')
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/plyr.css') }}">

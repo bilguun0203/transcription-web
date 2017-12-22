@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Prototype - Index')
+@section('title', 'Миний булан')
 
 @section('content')
     <div class="container" style="margin-top: 20px;">

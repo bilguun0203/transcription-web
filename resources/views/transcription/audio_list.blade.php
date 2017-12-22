@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Prototype - Validation')
+@section('title', 'Аудио файлууд')
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/plyr.css') }}">

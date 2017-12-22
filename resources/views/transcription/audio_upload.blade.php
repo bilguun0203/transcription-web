@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Prototype - Index')
+@section('title', 'Файл хуулах')
 
 @section('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.fileupload.css') }}">

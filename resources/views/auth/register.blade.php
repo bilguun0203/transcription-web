@@ -1,6 +1,6 @@
 @extends('transcription.layout.main')
 
-@section('title', 'Prototype - Register')
+@section('title', 'Бүртгүүлэх')
 
 @section('content')
     <div class="container" style="margin-top: 20px;">
