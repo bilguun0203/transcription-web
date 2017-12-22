@@ -31,8 +31,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Даалгавар - {{ $task->id }}</h4>
-                                <audio data-plyr='{ "autoplay":true }' controls>
-                                    <source src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . $task->audio->file }}@endif" type="audio/wav">
+                                <audio data-plyr='{ "autoplay":true }' controls src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . $task->audio->file }}@endif" type="audio/wav">
                                 </audio>
                                 <div class="alert alert-info"><strong>Бичвэр:</strong> <br/>{!!  $transcribed->transcription !!}</div>
                                 <form method="post" action="{{ route('validate.save') }}">
