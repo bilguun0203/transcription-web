@@ -34,14 +34,15 @@
                                 <audio data-plyr='{ "autoplay":true }' controls>
                                     <source src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . $task->audio->file }}@endif" type="audio/wav">
                                 </audio>
-                                <div class="alert alert-info"><strong>Бичвэр:</strong> {{ $transcribed->transcription }}</div>
+                                <div class="alert alert-info"><strong>Бичвэр:</strong> <br/>{!!  $transcribed->transcription !!}</div>
                                 <form method="post" action="{{ route('validate.save') }}">
                                     {{ csrf_field() }}
                                     <input type="hidden" value="{{ $task->id }}" name="task_id" class="form-control">
                                     <input type="hidden" value="{{ $transcribed->id }}" name="transcription_id" class="form-control">
                                     <div class="text-center">
-                                        <button type="submit" name="validation" value="d" class="btn btn-raised btn-danger" data-toggle="tooltip" data-placement="top" title="Аудио файлд ярьж буй яриа нь бичвэртэй таарахгүй байна"><i class="far fa-times"></i> Буруу</button>
                                         <button type="submit" name="validation" value="a" class="btn btn-raised btn-success" data-toggle="tooltip" data-placement="top" title="Аудио файлд ярьж буй яриа, бичвэр хоёр тохирч байна"><i class="far fa-check"></i> Зөв</button>
+                                        <button type="submit" name="validation" value="d" class="btn btn-raised btn-danger" data-toggle="tooltip" data-placement="top" title="Аудио файлд ярьж буй яриа нь бичвэртэй таарахгүй байна"><i class="far fa-times"></i> Буруу</button>
+
                                     </div>
                                 </form>
                             </div>
