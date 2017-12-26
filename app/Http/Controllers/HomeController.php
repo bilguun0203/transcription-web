@@ -64,14 +64,15 @@ class HomeController extends TController
 
     public function profile_save(Request $request){
         $validatedData = $request->validate([
-            'name' => ['required','string','max:255', new SisiID, Rule::unique('users')->ignore(Auth::user()->id)],
+//            'name' => ['required','string','max:255', new SisiID, Rule::unique('users')->ignore(Auth::user()->id)],
             'email' => ['required','string','email','max:255',Rule::unique('users')->ignore(Auth::user()->id)],
         ]);
         $user = User::findOrFail(Auth::user()->id);
-        $user->name = $request->input('name');
+//        $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->save();
-        return redirect()->route('profile')->with('msg', 'Нэр, цахим шуудан амжилттай хадгалагдлаа.');
+//        return redirect()->route('profile')->with('msg', 'Нэр, цахим шуудан амжилттай хадгалагдлаа.');
+        return redirect()->route('profile')->with('msg', 'Цахим шуудан амжилттай хадгалагдлаа.');
     }
 
     public function profile_change_password(Request $request){

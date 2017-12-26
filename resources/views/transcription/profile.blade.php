@@ -40,7 +40,7 @@
                             {{ csrf_field() }}
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="bmd-label-floating"><i class="far fa-user"></i> Хэрэглэгчийн нэр /Sisi ID/</label>
-                                <input type="text" class="form-control" name="name" id="name" aria-describedby="name" value="{{ Auth::user()->name }}" required>
+                                <input type="text" class="form-control" disabled name="name" id="name" aria-describedby="name" value="{{ Auth::user()->name }}" required>
                                 @if ($errors->has('name'))
                                     <small class="bmd-help">{{ $errors->first('name') }}</small>
                                 @endif
