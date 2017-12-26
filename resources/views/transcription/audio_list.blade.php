@@ -15,6 +15,19 @@
                         <h4 class="card-title">Файлууд</h4>
                         <h6 class="card-subtitle text-muted mt-2"><strong>Нийт:</strong> {{ $total_rows }} <strong>Хүснэгтэнд:</strong> {{ $row_from }} - {{ $row_to }}</h6>
                         <hr>
+                        @if(session('msg'))
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 col-sm-8 col-xs-12">
+                                    <div class="alert alert-info">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                            <span class="sr-only">Хаах</span>
+                                        </button>
+                                        {{ session('msg') }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         @foreach($errors->all() as $error)
                             <div class="row justify-content-center">
                                 <div class="col-md-6 col-sm-8 col-xs-12">
@@ -45,6 +58,13 @@
                             <table class="table" id="audio-table">
                                 <thead>
                                 <tr>
+                                    {{--<th style="width: 1%">--}}
+                                        {{--<div class="checkbox">--}}
+                                            {{--<label>--}}
+                                                {{--<input type="checkbox" id="checkall">--}}
+                                            {{--</label>--}}
+                                        {{--</div>--}}
+                                    {{--</th>--}}
                                     <th style="width: 1%;">#</th>
                                     <th style="width: 25%;">Аудио</th>
                                     <th style="width: 50%;">Бичвэр</th>
@@ -58,16 +78,26 @@
                                 <tbody>
                                 @foreach($audios as $audio)
                                 <tr>
+                                    {{--<td>--}}
+                                        {{--<div class="checkbox">--}}
+                                            {{--<label>--}}
+                                                {{--<input type="checkbox" name="audios[]" value="{{ $audio->id }}" class="audios-checkbox">--}}
+                                            {{--</label>--}}
+                                        {{--</div>--}}
+                                    {{--</td>--}}
                                     <td scope="row">{{ $audio->id }}</td>
                                     <td>
                                         <audio controls src="@if($audio->isLocal){{ asset($audio->url .  $audio->file) }}@else{{ $audio->url . $audio->file }}@endif" type="audio_files/wav"></audio>
                                     </td>
-                                    <td>@if($audio->tasks[0]->getLatestTranscribed() != null)
+                                    @if($audio->tasks[0]->getLatestTranscribed() != null)
+                                        <td data-toggle="tooltip" data-placement="top" title="{{ $audio->tasks[0]->getLatestTranscribed()->user->name }}">
                                             {{ $audio->tasks[0]->getLatestTranscribed()->transcription }}
+                                        </td>
                                         @else
+                                        <td>
                                             <i class="text-muted">Бичвэр ороогүй</i>
-                                        @endif
-                                    </td>
+                                        </td>
+                                    @endif
                                     <td>
                                         @if($audio->tasks[0]->getLatestTranscribed() != null)
                                             {{ $audio->tasks[0]->getLatestTranscribed()->getRequiredValidation() }}
@@ -105,10 +135,25 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-warning btn-sm disabled" data-toggle="tooltip" data-placement="top" title="Засах"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-success btn-sm disabled" data-toggle="tooltip" data-placement="top" title="Зөвшөөрөх"><i class="far fa-check"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm disabled" data-toggle="tooltip" data-placement="top" title="Зөвшөөрөхгүй"><i class="far fa-times"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm disabled" data-toggle="tooltip" data-placement="top" title="Устгах"><i class="far fa-trash"></i></button>
+{{--                                        @if($audio->tasks[0]->getLatestTranscribed() == null)--}}
+                                        <a href="{{ route('transcribe') }}?edit={{ $audio->tasks[0]->getTTask()->id }}" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Засах"><i class="far fa-edit"></i></a>
+                                        {{--@endif--}}
+                                        @if($audio->tasks[0]->getLatestTranscribed() != null)
+                                            @if($audio->tasks[0]->getLatestTranscribed()->getRequiredValidation() > 0)
+                                                <form method="post" action="{{ route('validate.save') }}" style="display: inline;">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="list" value="1" required>
+                                                    <input type="hidden" name="task_id" value="{{ $audio->tasks[0]->getVTask()->id }}" required>
+                                                    <input type="hidden" name="transcription_id" value="{{ $audio->tasks[0]->getLatestTranscribed()->id }}" required>
+                                                    <button type="submit" class="btn btn-success btn-sm" name="validation" value="a" data-toggle="tooltip" data-placement="top" title="Зөв"><i class="far fa-check"></i></button>
+                                                    <button type="submit" class="btn btn-danger btn-sm" name="validation" value="d" data-toggle="tooltip" data-placement="top" title="Буруу"><i class="far fa-times"></i></button>
+                                                </form>
+                                            @endif
+                                        @endif
+                                        <form method="post" action="{{ route('audio.delete') }}" style="display: inline;">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger btn-sm" name="delete" value="{{ $audio->id }}" onclick="return confirm('{{ $audio->id }} дугаартай файл, түүнтэй холбоотой бүх мэдээллийг устгах уу? Дахин сэргээх боломжгүй')" data-toggle="tooltip" data-placement="top" title="Устгах"><i class="far fa-trash"></i></button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -159,6 +204,23 @@
     <script>
         $(document).ready(function() {
             plyr.setup();
+
+//            $('#checkall').change(function() {
+//                var checkboxes = $(".audios-checkbox");
+//                if($(this).is(':checked')) {
+//                    checkboxes.prop('checked', true);
+//                } else {
+//                    checkboxes.prop('checked', false);
+//                }
+//            });
+//
+//            function get_ids(){
+//                var ids = [];
+//                $('.audios-checkbox:checked').each(function(i){
+//                    ids[i] = $(this).val();
+//                });
+//                return ids;
+//            }
         });
     </script>
 @endsection

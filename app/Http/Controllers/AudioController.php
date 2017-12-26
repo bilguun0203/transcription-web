@@ -13,6 +13,7 @@ use App\Task;
 use App\TaskTranscribed;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 
@@ -29,9 +30,12 @@ class AudioController extends TController
         $search_col = null;
         $search_val = null;
         $search_operator = null;
-        $item_per_page = 5;
+        $item_per_page = 10;
         if($request->has('page')){
             $page = $request->input('page');
+        }
+        if($request->has('item_per_page')){
+            $item_per_page = $request->input('item_per_page');
         }
         if($request->has('search_col')){
             $search_col = $request->input('search_col');
@@ -71,6 +75,13 @@ class AudioController extends TController
                 'total_rows' => $total_rows,
                 'request' => $request
             ]);
+    }
+
+    public function audio_delete(Request $request) {
+        $request->validate(['delete' => 'required']);
+        $model = Audio::find($request->input('delete'));
+        $model->delete();
+        return redirect(url()->previous())->with('msg', $request->input('delete') . ' дугаартай аудио холбогдох мэдээллийн хамт устлаа.');
     }
 
     public function add(){

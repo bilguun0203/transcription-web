@@ -24,13 +24,30 @@ class TaskController extends TController
      * Бичвэрт буулгах хуудас, хэрэглэгчид даалгаварыг сонгож өгөх
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function transcribe(){
+    public function transcribe(Request $request){
         $found = true;
-        $result = Task::where([['user_id', Auth::user()->id], ['type', 't']])->first();
+        $result = null;
+        $edit = false;
+        if($request->has('edit') && Auth::user()->isAdmin){
+            $edit = $request->input('edit');
+        }
+        else {
+            $result = Task::where([['user_id', Auth::user()->id], ['type', 't']])->first();
+        }
         if($result == null){
-            $result = Task::where('type', 't')->where('status', 1)->where(function($query){
-                $query->where('user_id', null)->orWhere('updated_at', '<', Carbon::now()->subSeconds(env('TIME'))->toDateTimeString());
-            })->first();
+            if($edit == false) {
+                $result = Task::where('type', 't')->where('status', 1)->where(function ($query) {
+                    $query->where('user_id', null)->orWhere('updated_at', '<', Carbon::now()->subSeconds(env('TIME'))->toDateTimeString());
+                })->first();
+            }
+            else {
+                $result = Task::where('type', 't')->where('id', $edit)->where(function ($query) {
+                    $query->where('user_id', null)->orWhere('user_id', Auth::user()->id)->orWhere('updated_at', '<', Carbon::now()->subSeconds(env('TIME'))->toDateTimeString());
+                })->first();
+                if($result == null){
+                    return redirect(url()->previous())->withErrors(['Даалгаварыг засахад алдаа гарлаа.']);
+                }
+            }
             if($result != null){
                 $result->user_id = Auth::user()->id;
                 $result->save();
@@ -130,6 +147,7 @@ class TaskController extends TController
             'transcription_id' => ['required']
         ]);
         $ttask = TaskTranscribed::find($request->input('transcription_id'));
+        $error = 2;
         if($ttask != null){
             if($ttask->user_id != Auth::user()->id){
                 TaskValidated::create(
@@ -138,9 +156,21 @@ class TaskController extends TController
                         'validation_status' => $request->input('validation'),
                         'task_id' => $request->input('task_id')
                     ]);
+                $error--;
             }
+            $error--;
+        }
+        if($request->has('list')){
+            if($error == 2)
+                return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрт санал өгөх даалгавар олдсонгүй.']);
+            elseif ($error == 1)
+                return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрийг та оруулсан тул санал өгөх боломжгүй.']);
+            else
+                return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрт "' . ($request->input('validation') == 'a' ? 'зөв' : 'буруу') . '" санал өглөө.']);
         }
         return redirect()->route('validate');
     }
+
+
 
 }

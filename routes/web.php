@@ -27,6 +27,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/profile/password', 'HomeController@profile_change_password')->name('profile.password');
         Route::group(['middleware' => ['admin']], function () {
             Route::get('/audio', 'AudioController@audio')->name('audio.list');
+            Route::post('/audio/delete', 'AudioController@audio_delete')->name('audio.delete');
             Route::get('/audio/upload', 'AudioController@add')->name('audio.add');
             Route::post('/audio/upload', 'AudioController@upload')->name('audio.upload');
         });
