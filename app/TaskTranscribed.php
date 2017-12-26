@@ -28,7 +28,7 @@ class TaskTranscribed extends Model
             $model->task->status = 0;
             $model->task->save();
             $task = $model->task->getVTask();
-            $task->status = 1;
+            $task->status = 0;
             $task->save();
         });
 
