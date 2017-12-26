@@ -39,19 +39,22 @@
                         Тоон үзүүлэлт
                     </div>
                     <div class="card-body">
-                        <h6>Бичвэр болгосон</h6>
+                        <h6>Миний бичвэр болгосон</h6>
                         <ul>
                             <li>Нийт: {{ $statust['a'] + $statust['d'] + $statust['p'] }}</li>
                             <li>Зөвшөөрөгдсөн: {{ $statust['a'] }}</li>
                             <li>Зөвшөөрөөгүй: {{ $statust['d'] }}</li>
                             <li>Хүлээгдэж байгаа: {{ $statust['p'] }}</li>
+                            <li><strong>Оноо:</strong> {{ $score_transcribe }}</li>
                         </ul>
-                        <h6>Шалгасан</h6>
+                        <h6>Миний шалгасан</h6>
                         <ul>
                             <li>Нийт: {{ $statusv['a'] + $statusv['d'] }}</li>
                             <li>Зөв: {{ $statusv['a'] }}</li>
                             <li>Буруу: {{ $statusv['d'] }}</li>
+                            <li><strong>Оноо:</strong> {{ $score_validate }}</li>
                         </ul>
+                        <h6>Нийт оноо: {{ $score_transcribe + $score_validate }}</h6>
                     </div>
                 </div>
             </div>
