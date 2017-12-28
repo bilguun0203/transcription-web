@@ -29,8 +29,6 @@
                     <li><b>Чимээгүй</b>: Чимээгүй бол *S тавина.</li>
                     <li><b>Тоо</b>: Тоог дуудлагаар нь бичнэ. Тоон илэрхийллээр бичихгүй. Жишээ нь: мянга есөн зуун арван хоёр гэх мэт. </li>
                 </ul>
-
-
             </div>
 
 
@@ -50,7 +48,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Даалгавар - {{ $task->id }}</h4>
-                                <audio data-plyr='{ "autoplay":true }' controls src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . $task->audio->file }}@endif" type="audio/wav"></audio>
+                                <audio data-plyr='{ "autoplay":true }' controls src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . '/'.$task->audio->file }}@endif" type="audio/wav"></audio>
                                 <form action="{{ route('transcribe.save') }}" method="post">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="task_id" class="form-control" value="{{ $task->id }}">
