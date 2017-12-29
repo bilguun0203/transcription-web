@@ -149,7 +149,7 @@ class TaskController extends TController
         $ttask = TaskTranscribed::find($request->input('transcription_id'));
         $error = 2;
         if($ttask != null){
-            if($ttask->user_id != Auth::user()->id){
+            if($ttask->user_id != Auth::user()->id && !$ttask->isAlreadyValidated()){
                 TaskValidated::create(
                     [
                         'task_transcribed_id' => $request->input('transcription_id'),
@@ -164,9 +164,9 @@ class TaskController extends TController
             if($error == 2)
                 return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрт санал өгөх даалгавар олдсонгүй.']);
             elseif ($error == 1)
-                return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрийг та оруулсан тул санал өгөх боломжгүй.']);
+                return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрийг та оруулсан, эсвэл өмнө нь санал өгсөн тул санал өгөх боломжгүй.']);
             else
-                return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрт "' . ($request->input('validation') == 'a' ? 'зөв' : 'буруу') . '" санал өглөө.']);
+                return redirect(url()->previous())->with('msg', $ttask->task->audio->id . ' дугаартай файлын бичвэрт "' . ($request->input('validation') == 'a' ? 'зөв' : 'буруу') . '" санал өглөө.');
         }
         return redirect()->route('validate');
     }
