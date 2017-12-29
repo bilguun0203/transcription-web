@@ -72,9 +72,10 @@
 </nav>
 @show
 
+<div class="pb-5">
 @section('content')
 @show
-
+</div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 @section('scripts')
