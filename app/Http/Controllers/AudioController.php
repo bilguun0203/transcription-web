@@ -80,8 +80,17 @@ class AudioController extends TController
     public function audio_delete(Request $request) {
         $request->validate(['delete' => 'required']);
         $model = Audio::find($request->input('delete'));
-        $model->delete();
-        return redirect(url()->previous())->with('msg', $request->input('delete') . ' дугаартай аудио холбогдох мэдээллийн хамт устлаа.');
+        if($model != null) {
+            $model->delete();
+            if($request->has('multiple')){
+                return response()->json(array('id' => $request->input('delete'), 'i' => $request->input('i')), 200);
+            }
+            return redirect(url()->previous())->with('msg', $request->input('delete') . ' дугаартай аудио холбогдох мэдээллийн хамт устлаа.');
+        }
+        if($request->has('multiple')){
+            return response()->json(array('id' => $request->input('delete'), 'i' => $request->input('i')), 404);
+        }
+        return redirect(url()->previous())->with('msg', $request->input('delete') . ' дугаартай аудио олдсонгүй.');
     }
 
     public function add(){

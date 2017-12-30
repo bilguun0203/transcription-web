@@ -12,6 +12,7 @@
 
     <!-- Material Design for Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-material-design.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
     @yield('additional_stylesheet')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
@@ -79,9 +80,10 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 @section('scripts')
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+    <script src="{{ asset('assets/js/jquery-2.2.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/popper.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
+    <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
     @yield('additional_scripts')
     <script>
         $(document).ready(function() {
@@ -90,6 +92,23 @@
             $.ajaxSetup({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
             });
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
         });
     </script>
 @show

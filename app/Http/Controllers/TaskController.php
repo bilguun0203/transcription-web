@@ -160,6 +160,14 @@ class TaskController extends TController
             }
             $error--;
         }
+        if($request->has('multiple')){
+            if($error == 2)
+                return response()->json(array('id' => $request->input('id'), 'i' => $request->input('i')), 404);
+            elseif ($error == 1)
+                return response()->json(array('id' => $request->input('id'), 'i' => $request->input('i')), 403);
+            else
+                return response()->json(array('id' => $request->input('id'), 'i' => $request->input('i')), 200);
+        }
         if($request->has('list')){
             if($error == 2)
                 return redirect(url()->previous())->withErrors([$ttask->task->audio->id . ' дугаартай файлын бичвэрт санал өгөх даалгавар олдсонгүй.']);

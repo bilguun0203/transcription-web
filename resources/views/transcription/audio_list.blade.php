@@ -44,27 +44,34 @@
                         @if($results == 0)
                             <div class="row justify-content-center">
                                 <div class="col-md-6 col-sm-8 col-xs-12">
-                                    <div class="alert-danger">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                                            <span class="sr-only">Хаах</span>
-                                        </button>
+                                    <div class="alert alert-danger">
                                         Үр дүн олдсонгүй
                                     </div>
                                 </div>
                             </div>
                         @endif
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="btn-group" role="group" aria-label="Second group">
+                                    <button type="button" id="btn-accept" class="btn btn-raised btn-success btn-bulk-validate" value="a"><i class="far fa-check"></i> Зөв</button>
+                                    <button type="button" id="btn-decline" class="btn btn-raised btn-danger btn-bulk-validate" value="d"><i class="far fa-times"></i> Буруу</button>
+                                </div>
+                                <div class="btn-group" role="group" aria-label="Third group">
+                                    <button type="button" id="btn-delete" class="btn btn-raised btn-danger"><i class="far fa-trash"></i> Устгах</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table" id="audio-table">
                                 <thead>
                                 <tr>
-                                    {{--<th style="width: 1%">--}}
-                                        {{--<div class="checkbox">--}}
-                                            {{--<label>--}}
-                                                {{--<input type="checkbox" id="checkall">--}}
-                                            {{--</label>--}}
-                                        {{--</div>--}}
-                                    {{--</th>--}}
+                                    <th style="width: 1%">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="checkall">
+                                            </label>
+                                        </div>
+                                    </th>
                                     <th style="width: 1%;">#</th>
                                     <th style="width: 25%;">Аудио</th>
                                     <th style="width: 50%;">Бичвэр</th>
@@ -77,14 +84,22 @@
                                 </thead>
                                 <tbody>
                                 @foreach($audios as $audio)
-                                <tr>
-                                    {{--<td>--}}
-                                        {{--<div class="checkbox">--}}
-                                            {{--<label>--}}
-                                                {{--<input type="checkbox" name="audios[]" value="{{ $audio->id }}" class="audios-checkbox">--}}
-                                            {{--</label>--}}
-                                        {{--</div>--}}
-                                    {{--</td>--}}
+                                <tr id="audio_{{ $audio->id }}">
+                                    <td>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="audios[]" value="{{ $audio->id }}"
+                                                       @if($audio->tasks[0]->getLatestTranscribed() != null)
+                                                           data-vtask="{{ $audio->tasks[0]->getVTask()->id }}"
+                                                           data-latest="{{ $audio->tasks[0]->getLatestTranscribed()->id }}"
+                                                       @else
+                                                           data-vtask="0"
+                                                           data-latest="0"
+                                                       @endif
+                                                       class="audios-checkbox">
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td scope="row">{{ $audio->id }}</td>
                                     <td>
                                         <audio controls src="@if($audio->isLocal){{ asset($audio->url .  $audio->file) }}@else{{ $audio->url . $audio->file }}@endif" type="audio_files/wav"></audio>
@@ -177,13 +192,13 @@
                                 @for($i=1; $i<=$total_page; $i++)
                                     <li class="page-item @if($page == $i)active @endif"><a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
                                 @endfor
-                                <li class="page-item @if($page == $total_page)disabled @endif">
+                                <li class="page-item @if($page >= $total_page)disabled @endif">
                                     <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $page + 1]) }}" aria-label="Next">
                                         <span aria-hidden="true"><i class="far fa-chevron-right"></i></span>
                                         <span class="sr-only">Дараах</span>
                                     </a>
                                 </li>
-                                <li class="page-item @if($page == $total_page)disabled @endif">
+                                <li class="page-item @if($page >= $total_page)disabled @endif">
                                     <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $total_page]) }}" aria-label="Last">
                                         <span aria-hidden="true"><i class="far fa-chevron-double-right"></i></span>
                                         <span class="sr-only">Сүүлийнх</span>
@@ -205,22 +220,139 @@
         $(document).ready(function() {
             plyr.setup();
 
-//            $('#checkall').change(function() {
-//                var checkboxes = $(".audios-checkbox");
-//                if($(this).is(':checked')) {
-//                    checkboxes.prop('checked', true);
-//                } else {
-//                    checkboxes.prop('checked', false);
-//                }
-//            });
-//
-//            function get_ids(){
-//                var ids = [];
-//                $('.audios-checkbox:checked').each(function(i){
-//                    ids[i] = $(this).val();
-//                });
-//                return ids;
-//            }
+            $("#btn-delete").click(function() {
+                var r = confirm("Сонголсон аудио файлууд болон түүнтэй холбоотой мэдээллүүдийг устгахдаа итгэлтэй байна уу?");
+                if(r === true) {
+                    var ids = get_ids(false);
+                    if (ids.length === 0) {
+                        toastr["error"]("Аудио файл сонгоно уу.");
+                    }
+                    else {
+                        for (var i = 0; i < ids.length; i++) {
+                            var saveData = $.ajax({
+                                url: "{{ route('audio.delete') }}",
+                                type: 'POST',
+                                data: {
+                                    'delete': ids[i],
+                                    'multiple': true,
+                                    'i': i
+                                },
+//                            dataType: "json",
+                                success: function (resultData, textStatus, jqxHR) {
+                                    $("#audio_" + ids[resultData['i']]).remove();
+                                    toastr["success"]("УСТГАСАН: #" + resultData['id']);
+                                    if (resultData['i'] == ids.length - 1) {
+                                        setTimeout(function() {
+                                            location.reload(true);
+                                        }, 1000);
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    toastr["error"]("УСТГАЛ АМЖИЛТГҮЙ: #" + jqXHR.responseJSON.id);
+                                    if (jqXHR.responseJSON.i == ids.length - 1) {
+                                        setTimeout(function() {
+                                            location.reload(true);
+                                        }, 1000);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+            $(".btn-bulk-validate").click(function() {
+                var value = $(this).val();
+                var r = null;
+                if(value == 'a'){
+                    r = confirm("Сонголсон аудио файлуудад санал өгөх үү?");
+                }
+                else if(value == 'd') {
+                    r = confirm("Сонголсон аудио файлуудад санал өгөх үү?");
+                }
+                if(r === true) {
+                    var ids = get_ids(true);
+                    if (ids.length === 0) {
+                        toastr["error"]("Аудио файл сонгоно уу.");
+                    }
+                    else {
+                        for (var i = 0; i < ids.length; i++) {
+                            if(ids[i].vtask != 0 && ids[i].latest != 0) {
+                                var saveData = $.ajax({
+                                    url: "{{ route('validate.save') }}",
+                                    type: 'POST',
+                                    data: {
+                                        'id': ids[i].id,
+                                        'validation': value,
+                                        'task_id': ids[i].vtask,
+                                        'transcription_id': ids[i].latest,
+                                        'multiple': true,
+                                        'i': i
+                                    },
+                                    success: function (resultData, textStatus, jqxHR) {
+                                        toastr["success"]("САНАЛ ӨГСӨН: #" + resultData['id']);
+                                        if (resultData['i'] == ids.length - 1) {
+                                            setTimeout(function () {
+                                                location.reload(true);
+                                            }, 1000);
+                                        }
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        if(jqXHR.status == 404){
+                                            toastr["error"]("САНАЛ ӨГӨХ БЧИВЭР ОЛДСОНГҮЙ: #" + jqXHR.responseJSON.id);
+                                        }
+                                        else if(jqXHR.status == 403) {
+                                            toastr["error"]("САНАЛ ӨГСӨН БАЙНА: #" + jqXHR.responseJSON.id);
+                                        }
+                                        else {
+                                            toastr["error"]("САНАЛ ӨГЧ ЧАДСАНГҮЙ: #" + jqXHR.responseJSON.id);
+                                        }
+                                        if (jqXHR.responseJSON.i == ids.length - 1) {
+                                            setTimeout(function () {
+                                                location.reload(true);
+                                            }, 1000);
+                                        }
+                                    }
+                                });
+                            }
+                            else {
+                                toastr["warning"]("САНАЛ ӨГӨХ БОЛООГҮЙ: #" + ids[i].id);
+                                if (i == ids.length - 1) {
+                                    setTimeout(function () {
+                                        location.reload(true);
+                                    }, 1000);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#checkall').change(function() {
+                var checkboxes = $(".audios-checkbox");
+                if($(this).is(':checked')) {
+                    checkboxes.prop('checked', true);
+                } else {
+                    checkboxes.prop('checked', false);
+                }
+            });
+
+            function get_ids(validation){
+                var ids = [];
+                $('.audios-checkbox:checked').each(function(i){
+                    if(validation){
+                        ids[i] = {
+                            'id': $(this).val(),
+                            'vtask': $(this).data('vtask'),
+                            'latest': $(this).data('latest')
+                        };
+                    }
+                    else {
+                        ids[i] = $(this).val();
+                    }
+                });
+                return ids;
+            }
         });
     </script>
 @endsection
