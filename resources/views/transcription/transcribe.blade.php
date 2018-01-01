@@ -10,16 +10,14 @@
 @section('content')
     <div class="container" style="margin-top: 20px;">
         <div class="row">
+
+            @include('transcription._guideline')
+
+
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-md-8 col-sm-10">
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                                <span class="sr-only">Хаах</span>
-                            </button>
-                            <strong>Санамж!</strong> {{ env('TRANSCRIPTION_RULE') }}
-                        </div>
+
                         @foreach($errors->all() as $error)
                             <div class="alert alert-danger">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,7 +30,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Даалгавар - {{ $task->id }}</h4>
-                                <audio data-plyr='{ "autoplay":true }' controls src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . $task->audio->file }}@endif" type="audio/wav"></audio>
+                                <audio data-plyr='{ "autoplay":true }' controls src="@if($task->audio->isLocal){{ asset($task->audio->url .  $task->audio->file) }}@else{{ $task->audio->url . '/'.$task->audio->file }}@endif" type="audio/wav"></audio>
                                 <form action="{{ route('transcribe.save') }}" method="post">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="task_id" class="form-control" value="{{ $task->id }}">

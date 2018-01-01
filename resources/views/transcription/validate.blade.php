@@ -9,16 +9,12 @@
 @section('content')
     <div class="container" style="margin-top: 20px;">
         <div class="row">
+
+            @include('transcription._guideline')
+
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-md-8 col-sm-10">
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                                <span class="sr-only">Хаах</span>
-                            </button>
-                            <strong>Санамж!</strong> /(^(#D)?[А-Яа-яЁёӨөҮү \.\*!\?,\.\(\)~\$%#<>GN-]{1,255}$)/u
-                        </div>
                         @foreach($errors->all() as $error)
                             <div class="alert alert-danger">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
