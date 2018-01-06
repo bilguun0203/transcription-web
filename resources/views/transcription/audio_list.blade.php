@@ -97,7 +97,7 @@
                                     <th style="width: 1%;"><i class="far fa-check"></i></th>
                                     <th style="width: 1%;"><i class="far fa-times"></i></th>
                                     <th style="width: 1%;">Төлөв</th>
-                                    <th style="width: 15%;">Үйлдэл /засвартай/</th>
+                                    <th style="width: 15%;">Үйлдэл</th>
                                 </tr>
                                 </thead>
                                 <tbody>
