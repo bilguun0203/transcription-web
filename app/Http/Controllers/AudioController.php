@@ -73,7 +73,8 @@ class AudioController extends TController
                 'results' => $result->count(),
                 'total_page' => ceil($total_rows/$item_per_page),
                 'total_rows' => $total_rows,
-                'request' => $request
+                'request' => $request,
+                'item_per_page' => $item_per_page
             ]);
     }
 

@@ -51,6 +51,24 @@
                             </div>
                         @endif
                         <div class="row">
+                            <div class="col-md-4">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Хуудсанд {{ $item_per_page }} мөр
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 5]) }}">5</a>
+                                        <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 10]) }}">10</a>
+                                        <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 25]) }}">25</a>
+                                        <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 50]) }}">50</a>
+                                        <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 75]) }}">75</a>
+                                        <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 100]) }}">100</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8"></div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12 text-center">
                                 <div class="btn-group" role="group" aria-label="Second group">
                                     <button type="button" id="btn-accept" class="btn btn-raised btn-success btn-bulk-validate" value="a"><i class="far fa-check"></i> Зөв</button>
