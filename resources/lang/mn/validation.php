@@ -84,7 +84,7 @@ return [
     ],
     'string'               => ':attribute тэмдэгтийн цуваа байх ёстой.',
     'timezone'             => ':attribute зөв цагийн бүсийг оруулна уу.',
-    'unique'               => ':attribute -н утга дахцсан байна.',
+    'unique'               => ':attribute -н утга давхцсан байна.',
     'uploaded'             => ':attribute илгээж чадсангүй.',
     'url'                  => ':attribute -н хэлбэр буруу.',
     'transcription'             => ':attribute дүрмийн дагуу байх ёстой',

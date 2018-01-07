@@ -20,7 +20,7 @@ class NotBanned
         {
             if(Auth::user()->isBanned()){
                 Auth::logout();
-                return redirect('/')->withErrors(['Таны нэвтрэх эрхийг хориглосон байна.']);
+                return redirect('/')->withErrors(['Таны нэвтрэх эрхийг хязгаарласан байна.']);
             }
             return $next($request);
         }
