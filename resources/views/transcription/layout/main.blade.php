@@ -42,6 +42,7 @@
                 @if(Auth::user()->isAdmin())
                     <li class="nav-item"><a class="nav-link" href="{{ route('audio.list') }}">Аудио файлууд</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('audio.add') }}">Файл нэмэх</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('user.list') }}">Хэрэглэгчид</a></li>
                 @endif
             @endauth
         </ul>

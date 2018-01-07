@@ -1,0 +1,75 @@
+<?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: bilguun
+ * Date: 1/6/18
+ * Time: 6:17 PM
+ */
+
+namespace App\Http\Controllers;
+
+use App\User;
+use Illuminate\Http\Request;
+
+class UserController extends TController
+{
+
+    public function users(Request $request){
+//        $validatedData = $request->validate([
+//            'page' => ['min:1']
+//        ]);
+        $page = 1;
+        $order_by = 'id';
+        $order_type = 'asc';
+        $search_col = null;
+        $search_val = null;
+        $search_operator = null;
+        $item_per_page = 10;
+        if($request->has('page')){
+            $page = $request->input('page');
+        }
+        if($request->has('item_per_page')){
+            $item_per_page = $request->input('item_per_page');
+        }
+        if($request->has('search_col')){
+            $search_col = $request->input('search_col');
+            if($request->has('search_val')){
+                $search_val = $request->input('search_val');
+                if($request->has('search_operator')){
+                    $search_operator = $request->input('search_operator');
+                }
+            }
+        }
+        if($request->has('order_by')){
+            $order_by = $request->input('order_by');
+        }
+        if($request->has('order_type')){
+            $order_type = $request->input('order_type');
+        }
+        $offset = $item_per_page * ($page-1);
+        $audios = User::orderBy($order_by, $order_type)->offset($offset)->limit($item_per_page);
+        if($search_col != null && $search_val != null){
+            if($search_operator != null){
+                $audios->where($search_col, $search_operator, $search_val);
+            }
+            else {
+                $audios->where($search_col, $search_val);
+            }
+        }
+        $result = $audios->get();
+        $total_rows = User::get()->count();
+        return view('transcription.users',
+            [
+                'users' => $result,
+                'row_from' => $offset+1,
+                'row_to' => $offset + $result->count(),
+                'page' => $page,
+                'results' => $result->count(),
+                'total_page' => ceil($total_rows/$item_per_page),
+                'total_rows' => $total_rows,
+                'request' => $request,
+                'item_per_page' => $item_per_page
+            ]);
+    }
+
+}
