@@ -7,6 +7,19 @@
         <div class="text-center">
             <h2><i class="far fa-music"></i> <i class="far fa-arrow-right"></i> <i class="far fa-font"></i></h2>
         </div>
+        @foreach($errors->all() as $error)
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-6 col-sm-8 col-xs-12">
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                            <span class="sr-only">Хаах</span>
+                        </button>
+                        {{ $error }}
+                    </div>
+                </div>
+            </div>
+        @endforeach
         @if(session('msg'))
         <div class="row justify-content-center mt-5">
             <div class="col-md-6 col-sm-8 col-xs-12">

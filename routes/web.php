@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web', 'notbanned']], function () {
     Route::get('/', 'HomeController@home')->name('home');
     Route::get('/home', 'HomeController@home')->name('home');
 
