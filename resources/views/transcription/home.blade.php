@@ -110,6 +110,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Хэрэглэгчдийн жагсаалт.</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ route('user.list') }}" class="btn btn-warning btn-block btn-raised"><i class="far fa-users"></i> Хэрэглэгчид</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
         @endauth
