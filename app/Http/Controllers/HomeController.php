@@ -54,9 +54,7 @@ class HomeController extends TController
         return view('transcription.home',
             [
                 'statust' => $statust,
-                'statusv' => $statusv,
-                'score_transcribe' => ($statust['a'] + $statust['d'] + $statust['p']) * env('SCORE_TRANSCRIPTION_ADD') + $statust['a'] * env('SCORE_PER_ACCEPTED_TRANSCRIPTION') + $statust['d'] * env('SCORE_PER_DECLINED_TRANSCRIPTION'),
-                'score_validate' => ($statusv['a'] + $statusv['d']) * env('SCORE_VALIDATE')
+                'statusv' => $statusv
             ]);
     }
 

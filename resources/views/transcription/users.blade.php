@@ -80,8 +80,9 @@
                                         {{--</div>--}}
                                     {{--</th>--}}
                                     <th style="width: 1%;">#</th>
-                                    <th style="width: 25%;">Нэр</th>
-                                    <th style="width: 50%;">Цахим шуудан</th>
+                                    <th>Нэр</th>
+                                    <th>Цахим шуудан</th>
+                                    <th style="width: 1%;">Оноо</th>
                                     <th style="width: 1%;">Төлөв</th>
                                     <th style="width: 1%;">Эрх</th>
                                     <th style="width: 15%;">Үйлдэл /засвартай/</th>
@@ -108,6 +109,7 @@
                                     <td scope="row">{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>{{ $user->score()['transcribe'] + $user->score()['validate'] }}</td>
                                     <td>
                                         @if($user->isBanned())
                                             <div class="badge badge-danger">ХОРИГЛОСОН</div>
