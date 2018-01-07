@@ -66,7 +66,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8"></div>
+                            <div class="col-md-8">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form class="form-inline" method="get">
+                                    <input type="hidden" name="search_col" value="name">
+                                    <div class="form-group">
+                                        <label for="search_id" class="bmd-label-floating">Хэрэглэгчийн нэр /Sisi ID/</label>
+                                        <input type="text" class="form-control" name="search_val" id="search_val">
+                                    </div>
+                                    <span class="form-group bmd-form-group">
+                                    <button type="submit" id="search-btn" class="btn btn-info"><i class="far fa-search"></i> Хайх</button>
+                                </span>
+                                </form>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table" id="user-table">
