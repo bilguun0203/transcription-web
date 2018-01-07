@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->isAdmin;
     }
+
+    public function isBanned()
+    {
+        return $this->status == 0 ? true : false;
+    }
 }
