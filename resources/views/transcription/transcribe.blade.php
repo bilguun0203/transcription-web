@@ -99,7 +99,8 @@
             check_rule();
         }
         function remove_whitespace(value){
-            return value.replace(/&nbsp;|<br>/g, '');
+            value = value.replace(/&nbsp;|<br>/g, '');
+            return value.replace(/<p><\/p>/g, '');
         }
         function check_rule(){
             var value = $('#transcription').summernote('code');
