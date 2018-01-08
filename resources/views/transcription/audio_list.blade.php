@@ -320,7 +320,7 @@
                                             toastr["error"]("САНАЛ ӨГӨХ БЧИВЭР ОЛДСОНГҮЙ: #" + jqXHR.responseJSON.id);
                                         }
                                         else if(jqXHR.status == 403) {
-                                            toastr["error"]("САНАЛ ӨГСӨН БАЙНА: #" + jqXHR.responseJSON.id);
+                                            toastr["error"]("САНАЛ ӨГСӨН ЭСВЭЛ ТАНЫ ОРУУЛСАН БИЧВЭР БАЙНА: #" + jqXHR.responseJSON.id);
                                         }
                                         else {
                                             toastr["error"]("САНАЛ ӨГЧ ЧАДСАНГҮЙ: #" + jqXHR.responseJSON.id);
