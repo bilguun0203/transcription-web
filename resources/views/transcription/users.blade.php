@@ -54,7 +54,7 @@
                             <div class="col-md-4">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Хуудсанд {{ $item_per_page }} мөр
+                                        Хүснэгтэнд {{ $item_per_page }} мөр
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 5]) }}">5</a>
