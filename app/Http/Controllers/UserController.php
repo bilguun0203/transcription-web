@@ -46,8 +46,7 @@ class UserController extends TController
         if($request->has('order_type')){
             $order_type = $request->input('order_type');
         }
-        $offset = $item_per_page * ($page-1);
-        $audios = User::orderBy($order_by, $order_type)->offset($offset)->limit($item_per_page);
+        $audios = User::orderBy($order_by, $order_type);
         if($search_col != null && $search_val != null){
             if($search_operator != null){
                 $audios->where($search_col, $search_operator, $search_val);
@@ -57,10 +56,13 @@ class UserController extends TController
             }
         }
         $result = $audios->get();
-        $total_rows = User::get()->count();
+
+        $offset = $item_per_page * ($page-1);
+        $filtered = $result->slice($offset, $item_per_page);
+        $total_rows = $result->count();
         return view('transcription.users',
             [
-                'users' => $result,
+                'users' => $filtered,
                 'row_from' => $offset+1,
                 'row_to' => $offset + $result->count(),
                 'page' => $page,
