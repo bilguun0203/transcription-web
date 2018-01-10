@@ -15,6 +15,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use function PHPSTORM_META\type;
 
 
 class AudioController extends TController
@@ -52,25 +53,99 @@ class AudioController extends TController
         if($request->has('order_type')){
             $order_type = $request->input('order_type');
         }
-        $offset = $item_per_page * ($page-1);
-        $audios = Audio::orderBy($order_by, $order_type)->offset($offset)->limit($item_per_page);
+        $audios = Audio::orderBy($order_by, $order_type);
+        /**
+         * Аудио доторх хайлт
+         */
         if($search_col != null && $search_val != null){
-            if($search_operator != null){
-                $audios->where($search_col, $search_operator, $search_val);
-            }
-            else {
-                $audios->where($search_col, $search_val);
+            if($search_col == 'id' || $search_col == 'file') {
+                if ($search_operator != null) {
+                    $audios->where($search_col, $search_operator, $search_val);
+                } else {
+                    $audios->where($search_col, $search_val);
+                }
             }
         }
         $result = $audios->get();
-        $total_rows = Audio::get()->count();
+
+        /**
+         * Өөр хүснэгтээс хийх хайлтууд
+         */
+        switch ($search_col) {
+            case 'transcription':
+                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+                    if($value->tasks[0]->getLatestTranscribed() != null) {
+                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->transcription, $search_val, 'string', $search_operator);
+                    }
+                    return false;
+                });
+                break;
+            case 'user':
+                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+                    if($value->tasks[0]->getLatestTranscribed() != null) {
+                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->user->name, $search_val, 'string', $search_operator);
+                    }
+                    return false;
+                });
+                break;
+            case 'validation_required':
+                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+                    if($value->tasks[0]->getLatestTranscribed() != null) {
+                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getRequiredValidation(), $search_val, 'number', $search_operator);
+                    }
+                    return false;
+                });
+                break;
+            case 'accepted':
+                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+                    if($value->tasks[0]->getLatestTranscribed() != null) {
+                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfAccepted(), $search_val, 'number', $search_operator);
+                    }
+                    return false;
+                });
+                break;
+            case 'declined':
+                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+                    if($value->tasks[0]->getLatestTranscribed() != null) {
+                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfDeclined(), $search_val, 'number', $search_operator);
+                    }
+                    return false;
+                });
+                break;
+            case 'status':
+                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+                    $status = 0;
+                    if($value->tasks[0]->getLatestTranscribed() == null) {
+                        $status = 0;
+                    }
+                    else {
+                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() > 0) {
+                            $status = 1;
+                        }
+                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() == 0) {
+                            if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() > 0) {
+                                $status = 2;
+                            }
+                            else if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() < 0) {
+                                $status = 3;
+                            }
+                        }
+                    }
+                    return $this->compare__operators($status, $search_val, 'number', $search_operator);
+                });
+                break;
+            default: break;
+        }
+        $offset = $item_per_page * ($page-1);
+        $filtered = $result->slice($offset, $item_per_page);
+        $total_rows = $result->count();
         return view('transcription.audio_list',
             [
-                'audios' => $result,
+                'audios' => $filtered,
                 'row_from' => $offset+1,
-                'row_to' => $offset + $result->count(),
+                'row_to' => $offset + $filtered->count(),
                 'page' => $page,
-                'results' => $result->count(),
+                'results' => $filtered->count(),
                 'total_page' => ceil($total_rows/$item_per_page),
                 'total_rows' => $total_rows,
                 'request' => $request,
@@ -125,6 +200,44 @@ class AudioController extends TController
         }
         else {
             return response()->json(false, 200);
+        }
+    }
+
+    private function compare__operators($val1, $val2, $type = 'number', $operator = '='){
+        if($type == 'number'){
+            switch ($operator) {
+                case '>':
+                    return $val1 > $val2;
+                    break;
+                case '<':
+                    return $val1 < $val2;
+                    break;
+                case '>=':
+                    return $val1 >= $val2;
+                    break;
+                case '<=':
+                    return $val1 <= $val2;
+                    break;
+                case '!=':
+                    return $val1 != $val2;
+                    break;
+                default:
+                    return $val1 == $val2;
+                    break;
+            }
+        }
+        else if($type == 'string'){
+            switch ($operator) {
+                case '!=':
+                    return $val1 > $val2;
+                    break;
+                case 'contains':
+                    return strpos($val1, $val2) !== false;
+                    break;
+                default:
+                    return $val1 == $val2;
+                    break;
+            }
         }
     }
 

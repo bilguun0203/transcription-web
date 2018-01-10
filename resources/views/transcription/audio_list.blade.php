@@ -51,10 +51,10 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4 text-center">
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Хуудсанд {{ $item_per_page }} мөр
+                                    <button class="btn btn-outline btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Хүснэгтэнд {{ $item_per_page }} мөр
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 5]) }}">5</a>
@@ -65,20 +65,65 @@
                                         <a class="dropdown-item" href="{{ $request->fullUrlWithQuery(['item_per_page' => 100]) }}">100</a>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div class="btn-group" role="group" aria-label="Second group">
+                                <hr>
+                                <p>Сонгосон мөрүүдэд гүйцэтгэх үйлдлүүд</p>
+                                <div class="btn-group" role="group" aria-label="First group">
                                     <button type="button" id="btn-accept" class="btn btn-raised btn-success btn-bulk-validate" value="a"><i class="far fa-check"></i> Зөв</button>
                                     <button type="button" id="btn-decline" class="btn btn-raised btn-danger btn-bulk-validate" value="d"><i class="far fa-times"></i> Буруу</button>
                                 </div>
-                                <div class="btn-group" role="group" aria-label="Third group">
+                                <div class="btn-group" role="group" aria-label="Second group">
                                     <button type="button" id="btn-delete" class="btn btn-raised btn-danger"><i class="far fa-trash"></i> Устгах</button>
                                 </div>
                             </div>
+                            <div class="col-md-8">
+                                <h4>Хайлт</h4>
+                                <form method="get">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="form-row">
+                                                <div class="form-group col-sm-6">
+                                                    <label class="" for="search_col">Хайх багана</label>
+                                                    <select class="form-control" name="search_col" id="search_col" required>
+                                                        <option value="" @if(app('request')->input('search_col') == null) selected @endif>Сонгох...</option>
+                                                        <option value="id" @if(app('request')->input('search_col') == 'id') selected @endif>Дугаар #</option>
+                                                        <option value="file" @if(app('request')->input('search_col') == 'file') selected @endif>Файлын нэр</option>
+                                                        <option value="transcription" @if(app('request')->input('search_col') == 'transcription') selected @endif>Бичвэр</option>
+                                                        <option value="user" @if(app('request')->input('search_col') == 'user') selected @endif>Хэрэглэгч</option>
+                                                        <option value="validation_required" @if(app('request')->input('search_col') == 'validation_required') selected @endif>Үлдсэн шалгалтын тоо</option>
+                                                        <option value="accepted" @if(app('request')->input('search_col') == 'accepted') selected @endif>Зөвшөөрсөн тоо</option>
+                                                        <option value="declined" @if(app('request')->input('search_col') == 'declined') selected @endif>Зөвшөөрөөгүй тоо</option>
+                                                        <option value="status" @if(app('request')->input('search_col') == 'status') selected @endif>Төлөв</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label class="" for="search_operator">Хайх оператор</label>
+                                                    <select class="form-control" name="search_operator" id="search_operator" required>
+                                                        <option value="=" @if(app('request')->input('search_operator') == null || app('request')->input('search_operator') == '=') selected @endif>=</option>
+                                                        <option value="!=" @if(app('request')->input('search_operator') == '!=') selected @endif>!=</option>
+                                                        <option value=">" @if(app('request')->input('search_operator') == '>') selected @endif>&gt; - зөвхөн тоо</option>
+                                                        <option value="<" @if(app('request')->input('search_operator') == '<') selected @endif>&lt; - зөвхөн тоо</option>
+                                                        <option value=">=" @if(app('request')->input('search_operator') == '>=') selected @endif>&gt;= - зөвхөн тоо</option>
+                                                        <option value="<=" @if(app('request')->input('search_operator') == '<=') selected @endif>&lt;= - зөвхөн тоо</option>
+                                                        <option value="contains" @if(app('request')->input('search_operator') == 'contains') selected @endif>агуулагдсан - зөвхөн бичвэр</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="search_val" id="search_val_label" class="bmd-label-floating">Хайх утга</label>
+                                                <input type="text" class="form-control" name="search_val" id="search_val" value="@if(app('request')->input('search_val') != null){{ app('request')->input('search_val') }}@endif" required/>
+                                                <small class="bmd-help" id="search_val_help"></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-outline btn-outline-primary"><i class="far fa-search"></i> Хайх</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
+                        <hr>
                         <div class="table-responsive">
                             <table class="table" id="audio-table">
                                 <thead>
@@ -370,6 +415,57 @@
                     }
                 });
                 return ids;
+            }
+
+            $("#search_col").change(function() {
+                search_col($(this));
+            });
+
+            search_col($("#search_col"));
+
+            function search_col(elem){
+                var column = elem.val();
+                switch (column) {
+                    case 'id':
+                        search_help(column, 'number', '/Тоо/', 'Аудио файлын дугаарыг оруулна уу.');
+                        break;
+                    case 'audio_file':
+                        search_help(column, 'text', '', 'Аудио файлын нэрийг оруулна уу.');
+                        break;
+                    case 'transcription':
+                        search_help(column, 'text', '', 'Бичвэр оруулна уу.');
+                        break;
+                    case 'user':
+                        search_help(column, 'text', '/Sisi ID/', 'Хэрэглэгчийн нэрийг оруулна уу.');
+                        break;
+                    case 'validation_required':
+                        search_help(column, 'number', '/Тоо/', 'Үлдсэн шалгалтын тоог оруулна уу.');
+                        break;
+                    case 'accepted':
+                        search_help(column, 'number', '/Тоо/', 'Зөвшөөрсөн саналын тоог оруулна уу.');
+                        break;
+                    case 'declined':
+                        search_help(column, 'number', '/Тоо/', 'Зөвшөөрөөгүй саналын тоог оруулна уу.');
+                        break;
+                    case 'status':
+                        search_help(column, 'number', '/Тоо/', 'Төлөв оруулна уу (0 - бичвэр ороогүй, 1 - хүлээгдэж байгаа, 2 - зөвшөөрсөн, 3 - зөвшөөрөөгүй).');
+                        break;
+                    default:
+                        search_help(column, 'text', '/Багана сонгоогүй/', 'Хайх багана сонгоно уу.');
+                        break;
+                }
+            }
+
+            function search_help(column, input_type, label_msg, help_msg) {
+                var label = $("#search_val_label");
+                var input = $("#search_val");
+                var help = $("#search_val_help");
+                label.html('Хайх утга ' + label_msg);
+                help.html(help_msg);
+                input.attr('type', input_type);
+                if(input_type === "number"){
+                    input.attr('min', 0);
+                }
             }
         });
     </script>
