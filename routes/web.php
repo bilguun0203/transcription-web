@@ -31,6 +31,7 @@ Route::group(['middleware' => ['web', 'notbanned']], function () {
             Route::get('/audio/upload', 'AudioController@add')->name('audio.add');
             Route::post('/audio/upload', 'AudioController@upload')->name('audio.upload');
             Route::get('/users', 'UserController@users')->name('user.list');
+            Route::post('/users', 'UserController@usersUpdate')->name('user.post');
         });
     });
 });

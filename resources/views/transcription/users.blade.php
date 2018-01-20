@@ -100,7 +100,7 @@
                                     <th style="width: 1%;">Оноо</th>
                                     <th style="width: 1%;">Төлөв</th>
                                     <th style="width: 1%;">Эрх</th>
-                                    <th style="width: 15%;">Үйлдэл /засвартай/</th>
+                                    <th style="width: 15%;">Үйлдэл</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -140,13 +140,35 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{--<form method="post" action="" style="display: inline;">--}}
-                                            {{--{{ csrf_field() }}--}}
-                                            <button type="button" class="btn btn-danger btn-sm" name="ban" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгчийг хориглох уу?')" data-toggle="tooltip" data-placement="top" title="Хориглох"><i class="far fa-ban"></i></button>
-                                        {{--</form>--}}
+                                        @if($user->isBanned())
+                                            <form method="post" action="" style="display: inline;">
+                                                {{ csrf_field() }}
+                                                <input type="hidden" name="user" value="{{ $user->id }}">
+                                                <button type="submit" class="btn btn-success btn-sm" name="unban" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгчийн хориог гаргах уу?')" data-toggle="tooltip" data-placement="top" title="Хорио гаргах"><i class="far fa-check"></i></button>
+                                            </form>
+                                        @else
+                                            <form method="post" action="" style="display: inline;">
+                                                {{ csrf_field() }}
+                                                <input type="hidden" name="user" value="{{ $user->id }}">
+                                                <button type="submit" class="btn btn-danger btn-sm" name="ban" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгчийг хориглох уу?')" data-toggle="tooltip" data-placement="top" title="Хориглох"><i class="far fa-ban"></i></button>
+                                            </form>
+                                        @endif
+                                        @if($user->isAdmin)
+                                            <form method="post" action="" style="display: inline;">
+                                                {{ csrf_field() }}
+                                                <input type="hidden" name="user" value="{{ $user->id }}">
+                                                <button type="submit" class="btn btn-primary btn-sm" name="demote" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгчийн админ эрхийг хураах уу?')" data-toggle="tooltip" data-placement="top" title="Админ эрх хураах"><i class="far fa-user"></i></button>
+                                            </form>
+                                        @else
+                                            <form method="post" action="" style="display: inline;">
+                                                {{ csrf_field() }}
+                                                <input type="hidden" name="user" value="{{ $user->id }}">
+                                                <button type="submit" class="btn btn-warning btn-sm" name="promote" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгчид админ эрх өгөх үү?')" data-toggle="tooltip" data-placement="top" title="Админ эрх өгөх"><i class="far fa-user-secret"></i></button>
+                                            </form>
+                                        @endif
                                         {{--<form method="post" action="" style="display: inline;">--}}
 {{--                                            {{ csrf_field() }}--}}
-                                            <button type="button" class="btn btn-danger btn-sm" name="delete" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгч, түүнтэй холбоотой бүх мэдээллийг устгах уу? Дахин сэргээх боломжгүй.')" data-toggle="tooltip" data-placement="top" title="Устгах"><i class="far fa-trash"></i></button>
+                                            {{--<button type="button" class="btn btn-danger btn-sm" name="delete" value="{{ $user->id }}" onclick="return confirm('{{ $user->name }} нэртэй хэрэглэгч, түүнтэй холбоотой бүх мэдээллийг устгах уу? Дахин сэргээх боломжгүй.')" data-toggle="tooltip" data-placement="top" title="Устгах"><i class="far fa-trash"></i></button>--}}
                                         {{--</form>--}}
                                     </td>
                                 </tr>

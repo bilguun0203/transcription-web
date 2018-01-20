@@ -74,4 +74,33 @@ class UserController extends TController
             ]);
     }
 
+    public function usersUpdate(Request $request) {
+        $request->validate(['user' => 'required']);
+        $user = User::find($request->input('user'));
+        if($user != null){
+            if($request->has('ban')){
+                $user->status = 0;
+                $user->save();
+                return redirect(url()->previous())->with('msg', $user->name . ' нэртэй хэрэглэгчийг хориглолоо.');
+            }
+            elseif($request->has('unban')){
+                $user->status = 1;
+                $user->save();
+                return redirect(url()->previous())->with('msg', $user->name . ' нэртэй хэрэглэгчийн хориог гаргалаа.');
+            }
+            elseif($request->has('promote')){
+                $user->isAdmin = true;
+                $user->save();
+                return redirect(url()->previous())->with('msg', $user->name . ' нэртэй хэрэглэгчид админ эрх олголоо.');
+            }
+            elseif($request->has('demote')){
+                $user->isAdmin = false;
+                $user->save();
+                return redirect(url()->previous())->with('msg', $user->name . ' нэртэй хэрэглэгчийн админ эрхийг хураалаа.');
+            }
+            return redirect(url()->previous())->withErrors('Үйлдэл тодорхойгүй!');
+        }
+        return redirect(url()->previous())->withErrors('Хэрэглэгч олдсонгүй!');
+    }
+
 }
