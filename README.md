@@ -27,7 +27,7 @@
 
 `APP_LOG_LEVEL=debug`
 
-`APP_URL=http://transcription.dev` http://transcription.web-ийн оронд өөрийн веб рүү хандах хаягаа бичнэ
+`APP_URL=http://transcription.dev` http://transcription.dev-ийн оронд өөрийн веб рүү хандах хаягаа бичнэ
 
 --
 
