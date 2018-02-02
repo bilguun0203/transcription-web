@@ -15,6 +15,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use function PHPSTORM_META\type;
 
 
@@ -201,6 +202,42 @@ class AudioController extends TController
         else {
             return response()->json(false, 200);
         }
+    }
+
+    public function export(Request $request) {
+        $result = Audio::all();
+        $result = $result->filter(function($value) {
+            if($value->tasks[0]->getLatestTranscribed() != null){
+                if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() == 0 && $value->tasks[0]->getLatestTranscribed()->getValidationStatus() > 0) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        $json = [];
+        foreach($result as $item){
+            array_push($json, [
+                'id' => $item->id,
+                'file' => $item->file,
+                'task' => [
+                    'transcribe' => [
+                        'id' => $item->tasks[0]->getTTask()->id,
+                        'transcription' => $item->tasks[0]->getLatestTranscribed()->transcription
+                    ],
+                    'validate' => [
+                        'id' => $item->tasks[0]->getVTask()->id,
+                        'number_of_accepted' => $item->tasks[0]->getLatestTranscribed()->getNumberOfAccepted(),
+                        'number_of_declined' => $item->tasks[0]->getLatestTranscribed()->getNumberOfDeclined(),
+                    ]
+                ]
+            ]);
+        }
+
+        $dest = storage_path('json');
+        $filename = time().'-'.'export.json';
+        $file_path = $dest . '/' . $filename;
+        File::put($file_path, json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        return Response::download($file_path);
     }
 
     private function compare__operators($val1, $val2, $type = 'number', $operator = '='){

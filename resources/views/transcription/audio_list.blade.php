@@ -124,6 +124,9 @@
                             </div>
                         </div>
                         <hr>
+                        <div class="float-right">
+                            <span class="text-muted">Баталгаажсан бичвэрүүдийг</span> <a href="{{ route('audio.export') }}" class="btn btn-info btn-sm">JSON хэлбэрээр татах</a>
+                        </div>
                         <div class="table-responsive">
                             <table class="table" id="audio-table">
                                 <thead>
