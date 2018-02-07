@@ -236,7 +236,7 @@ class AudioController extends TController
         $dest = storage_path('json');
         $filename = time().'-'.'export.json';
         $file_path = $dest . '/' . $filename;
-        File::put($file_path, json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        File::put($file_path, json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         return Response::download($file_path);
     }
 
