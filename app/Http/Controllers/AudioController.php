@@ -26,16 +26,12 @@ class AudioController extends TController
 //        $validatedData = $request->validate([
 //            'page' => ['min:1']
 //        ]);
-        $page = 1;
         $order_by = 'id';
         $order_type = 'asc';
         $search_col = null;
         $search_val = null;
         $search_operator = null;
         $item_per_page = 10;
-        if($request->has('page')){
-            $page = $request->input('page');
-        }
         if($request->has('item_per_page')){
             $item_per_page = $request->input('item_per_page');
         }
@@ -66,91 +62,94 @@ class AudioController extends TController
                     $audios->where($search_col, $search_val);
                 }
             }
-        }
-        $result = $audios->get();
+            else {
 
-        /**
-         * Өөр хүснэгтээс хийх хайлтууд
-         */
-        switch ($search_col) {
-            case 'transcription':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->transcription, $search_val, 'string', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'user':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->user->name, $search_val, 'string', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'validation_required':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getRequiredValidation(), $search_val, 'number', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'accepted':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfAccepted(), $search_val, 'number', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'declined':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfDeclined(), $search_val, 'number', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'status':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    $status = 0;
-                    if($value->tasks[0]->getLatestTranscribed() == null) {
-                        $status = 0;
-                    }
-                    else {
-                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() > 0) {
-                            $status = 1;
-                        }
-                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() == 0) {
-                            if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() > 0) {
-                                $status = 2;
-                            }
-                            else if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() < 0) {
-                                $status = 3;
-                            }
-                        }
-                    }
-                    return $this->compare__operators($status, $search_val, 'number', $search_operator);
-                });
-                break;
-            default: break;
+            }
         }
-        $offset = $item_per_page * ($page-1);
-        $filtered = $result->slice($offset, $item_per_page);
-        $total_rows = $result->count();
+        $result = $audios->paginate($item_per_page);
+
+//
+//        /**
+//         * Өөр хүснэгтээс хийх хайлтууд
+//         */
+//        switch ($search_col) {
+//            case 'transcription':
+//                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+//                    if($value->tasks[0]->getLatestTranscribed() != null) {
+//                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->transcription, $search_val, 'string', $search_operator);
+//                    }
+//                    return false;
+//                });
+//                break;
+//            case 'user':
+//                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+//                    if($value->tasks[0]->getLatestTranscribed() != null) {
+//                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->user->name, $search_val, 'string', $search_operator);
+//                    }
+//                    return false;
+//                });
+//                break;
+//            case 'validation_required':
+//                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+//                    if($value->tasks[0]->getLatestTranscribed() != null) {
+//                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getRequiredValidation(), $search_val, 'number', $search_operator);
+//                    }
+//                    return false;
+//                });
+//                break;
+//            case 'accepted':
+//                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+//                    if($value->tasks[0]->getLatestTranscribed() != null) {
+//                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfAccepted(), $search_val, 'number', $search_operator);
+//                    }
+//                    return false;
+//                });
+//                break;
+//            case 'declined':
+//                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+//                    if($value->tasks[0]->getLatestTranscribed() != null) {
+//                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfDeclined(), $search_val, 'number', $search_operator);
+//                    }
+//                    return false;
+//                });
+//                break;
+//            case 'status':
+//                $result = $result->filter(function($value) use ($search_operator, $search_val) {
+//                    $status = 0;
+//                    if($value->tasks[0]->getLatestTranscribed() == null) {
+//                        $status = 0;
+//                    }
+//                    else {
+//                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() > 0) {
+//                            $status = 1;
+//                        }
+//                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() == 0) {
+//                            if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() > 0) {
+//                                $status = 2;
+//                            }
+//                            else if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() < 0) {
+//                                $status = 3;
+//                            }
+//                        }
+//                    }
+//                    return $this->compare__operators($status, $search_val, 'number', $search_operator);
+//                });
+//                break;
+//            default: break;
+//        }
+
         return view('transcription.audio_list',
             [
-                'audios' => $filtered,
-                'row_from' => $offset+1,
-                'row_to' => $offset + $filtered->count(),
-                'page' => $page,
-                'results' => $filtered->count(),
-                'total_page' => ceil($total_rows/$item_per_page),
-                'total_rows' => $total_rows,
-                'request' => $request,
-                'item_per_page' => $item_per_page
+                'audios' => $result,
+                'total' => $result->total(),
+                'page' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'lastItem' => $result->lastItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'count' => $result->count(),
+                'request' => $request
             ]);
     }
 
