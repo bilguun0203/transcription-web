@@ -104,7 +104,7 @@
                                                         <option value="<" @if(app('request')->input('search_operator') == '<') selected @endif>&lt; - зөвхөн тоо</option>
                                                         <option value=">=" @if(app('request')->input('search_operator') == '>=') selected @endif>&gt;= - зөвхөн тоо</option>
                                                         <option value="<=" @if(app('request')->input('search_operator') == '<=') selected @endif>&lt;= - зөвхөн тоо</option>
-                                                        <option value="contains" @if(app('request')->input('search_operator') == 'contains') selected @endif>агуулагдсан - зөвхөн бичвэр</option>
+                                                        <option value="like" @if(app('request')->input('search_operator') == 'like') selected @endif>агуулагдсан - зөвхөн бичвэр</option>
                                                     </select>
                                                 </div>
                                             </div>
