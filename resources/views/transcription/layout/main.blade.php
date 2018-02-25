@@ -81,7 +81,7 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 @section('scripts')
-    <script src="{{ asset('assets/js/jquery-2.2.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/popper.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
     <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
