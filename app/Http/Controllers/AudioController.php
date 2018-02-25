@@ -112,12 +112,18 @@ class AudioController extends TController
                         });
                         break;
                     case 'user':
-//                        $result = $result->filter(function($value) use ($search_operator, $search_val) {
-//                            if($value->tasks[0]->getLatestTranscribed() != null) {
-//                                return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->user->name, $search_val, 'string', $search_operator);
-//                            }
-//                            return false;
-//                        });
+                        $audios->whereIn('id', function($query) use($search_operator, $search_val) {
+                            $query->select('task.audio_id')
+                                ->from('task_transcribed AS tt')
+                                ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                                    function($join) {
+                                        $join->on('ld.task_id', '=', 'tt.task_id');
+                                        $join->on('ld.latest', '=', 'tt.created_at');
+                                    })
+                                ->join('users', 'tt.user_id', '=', 'users.id')
+                                ->join('task', 'tt.task_id', '=', 'task.id')
+                                ->where('users.name', $search_operator, $search_val);
+                        });
                         break;
                     case 'validation_required':
 //                        $result = $result->filter(function($value) use ($search_operator, $search_val) {
