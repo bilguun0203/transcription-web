@@ -98,13 +98,13 @@
                                                 <div class="form-group col-sm-6">
                                                     <label class="" for="search_operator">Хайх оператор</label>
                                                     <select class="form-control" name="search_operator" id="search_operator" required>
-                                                        <option value="=" @if(app('request')->input('search_operator') == null || app('request')->input('search_operator') == '=') selected @endif>=</option>
-                                                        <option value="!=" @if(app('request')->input('search_operator') == '!=') selected @endif>!=</option>
-                                                        <option value=">" @if(app('request')->input('search_operator') == '>') selected @endif>&gt; - зөвхөн тоо</option>
-                                                        <option value="<" @if(app('request')->input('search_operator') == '<') selected @endif>&lt; - зөвхөн тоо</option>
-                                                        <option value=">=" @if(app('request')->input('search_operator') == '>=') selected @endif>&gt;= - зөвхөн тоо</option>
-                                                        <option value="<=" @if(app('request')->input('search_operator') == '<=') selected @endif>&lt;= - зөвхөн тоо</option>
-                                                        <option value="contains" @if(app('request')->input('search_operator') == 'contains') selected @endif>агуулагдсан - зөвхөн бичвэр</option>
+                                                        <option value="=" @if(app('request')->input('search_operator') == null || app('request')->input('search_operator') == '=') selected @endif>= тоо/бичвэр</option>
+                                                        <option value="!=" @if(app('request')->input('search_operator') == '!=') selected @endif>!= тоо/бичвэр</option>
+                                                        <option value=">" @if(app('request')->input('search_operator') == '>') selected @endif>&gt; тоо</option>
+                                                        <option value="<" @if(app('request')->input('search_operator') == '<') selected @endif>&lt; - тоо</option>
+                                                        <option value=">=" @if(app('request')->input('search_operator') == '>=') selected @endif>&gt;= - тоо</option>
+                                                        <option value="<=" @if(app('request')->input('search_operator') == '<=') selected @endif>&lt;= - тоо</option>
+                                                        <option value="contains" @if(app('request')->input('search_operator') == 'contains') selected @endif>агуулагдсан - бичвэр</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -430,33 +430,82 @@
                 var column = elem.val();
                 switch (column) {
                     case 'id':
+                        operator_select([true, true, true, true, true, true, false]);
                         search_help(column, 'number', '/Тоо/', 'Аудио файлын дугаарыг оруулна уу.');
                         break;
-                    case 'audio_file':
+                    case 'file':
+                        operator_select([true, true, false, false, false, false, true]);
                         search_help(column, 'text', '', 'Аудио файлын нэрийг оруулна уу.');
                         break;
                     case 'transcription':
+                        operator_select([true, true, false, false, false, false, true]);
                         search_help(column, 'text', '', 'Бичвэр оруулна уу.');
                         break;
                     case 'user':
+                        operator_select([true, true, false, false, false, false, true]);
                         search_help(column, 'text', '/Sisi ID/', 'Хэрэглэгчийн нэрийг оруулна уу.');
                         break;
                     case 'validation_required':
+                        operator_select([true, true, true, true, true, true, false]);
                         search_help(column, 'number', '/Тоо/', 'Үлдсэн шалгалтын тоог оруулна уу.');
                         break;
                     case 'accepted':
+                        operator_select([true, true, true, true, true, true, false]);
                         search_help(column, 'number', '/Тоо/', 'Зөвшөөрсөн саналын тоог оруулна уу.');
                         break;
                     case 'declined':
+                        operator_select([true, true, true, true, true, true, false]);
                         search_help(column, 'number', '/Тоо/', 'Зөвшөөрөөгүй саналын тоог оруулна уу.');
                         break;
                     case 'status':
-                        search_help(column, 'number', '/Тоо/', 'Төлөв оруулна уу (0 - бичвэр ороогүй, 1 - хүлээгдэж байгаа, 2 - зөвшөөрсөн, 3 - зөвшөөрөөгүй).');
+                        operator_select([true, true, true, true, true, true, false]);
+                        search_help(column, 'number', '/Тоо/', 'Төлөв оруулна уу (0 - бичвэр ороогүй, 1 - шалгагдаж байгаа, 2 - зөвшөөрсөн, 3 - зөвшөөрөөгүй).');
                         break;
                     default:
+                        operator_select([true, false, false, false, false, false, false]);
                         search_help(column, 'text', '/Багана сонгоогүй/', 'Хайх багана сонгоно уу.');
                         break;
                 }
+            }
+
+            function operator_select(allowed_operator) {
+                var operator_list = [
+                        {
+                            "value": "=",
+                            "text": "= - тоо/бичвэр"
+                        },
+                        {
+                            "value": "!=",
+                            "text": "!= - тоо/бичвэр"
+                        },
+                        {
+                            "value": ">",
+                            "text": "> тоо"
+                        },
+                        {
+                            "value": "<",
+                            "text": "< тоо"
+                        },
+                        {
+                            "value": ">=",
+                            "text": ">= тоо"
+                        },
+                        {
+                            "value": "<=",
+                            "text": "<= тоо"
+                        },
+                        {
+                            "value": "contains",
+                            "text": "агуулагдсан - бичвэр"
+                        }
+                    ];
+                var html = '';
+                for (var i in operator_list) {
+                    if(allowed_operator[i]){
+                        html += '<option value="' + operator_list[i].value + '">' + operator_list[i].text + '</option>'
+                    }
+                }
+                $("#search_operator").html(html);
             }
 
             function search_help(column, input_type, label_msg, help_msg) {
