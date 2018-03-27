@@ -23,39 +23,6 @@ class AudioController extends TController
 {
 
     public function audio(Request $request){
-
-//        $ld = DB::table('task_transcribed AS ld')
-//            ->select('ld.task_id', DB::raw('MAX(ld.created_at) as latest'))
-//            ->groupBy('ld.task_id')
-//            ->get();
-
-//        $tt = DB::table('task_transcribed AS tt')
-//            ->select('tt.task_id', 'tt.transcription', 'tt.user_id')
-//            ->whereIn('tt.task_id', function($query) {
-//                $query->select('task_id', DB::raw('MAX(created_at) as latest'))
-//                    ->from(with(new TaskTranscribed)->getTable())
-//                    ->groupBy('task_id');
-//            });
-
-        /*
-        $tt = DB::table('task_transcribed AS tt')
-            ->select('task.audio_id', 'tt.task_id', 'tt.transcription', 'tt.user_id')
-            ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
-                function($join) {
-                    $join->on('ld.task_id', '=', 'tt.task_id');
-                    $join->on('ld.latest', '=', 'tt.created_at');
-                })
-            ->join('task', 'tt.task_id', '=', 'task.id')
-            ->where('transcription', '=', '<p>%өө</p>')
-            ->get();
-
-//        dump($);
-        dump($tt);
-        return 0;
-        */
-//        $validatedData = $request->validate([
-//            'page' => ['min:1']
-//        ]);
         $order_by = 'id';
         $order_type = 'asc';
         $search_col = null;
@@ -172,19 +139,6 @@ class AudioController extends TController
                                 });
                                 break;
                             case 1:
-//                                $audios->whereIn('id', function($query) use($search_operator, $search_val) {
-//                                    $query->select('task.audio_id')
-//                                        ->from('task_transcribed AS tt')
-//                                        ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
-//                                            function($join) {
-//                                                $join->on('ld.task_id', '=', 'tt.task_id');
-//                                                $join->on('ld.latest', '=', 'tt.created_at');
-//                                            })
-//                                        ->join('task_validated', 'task_validated.task_transcribed_id', '=', 'tt.id')
-//                                        ->join('task', 'task_validated.task_id', '=', 'task.id')
-//                                        ->where('task.status', '>=', 0)
-//                                        ->where('task.status', '<', env('VALIDATION_COUNT'));
-//                                });
                                 $audios->whereIn('id', function($query) use($search_operator, $search_val) {
                                     $query->select('task.audio_id')
                                         ->from('task')
@@ -321,44 +275,6 @@ class AudioController extends TController
         $file_path = $dest . '/' . $filename;
         File::put($file_path, json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         return Response::download($file_path);
-    }
-
-    private function compare__operators($val1, $val2, $type = 'number', $operator = '='){
-        if($type == 'number'){
-            switch ($operator) {
-                case '>':
-                    return $val1 > $val2;
-                    break;
-                case '<':
-                    return $val1 < $val2;
-                    break;
-                case '>=':
-                    return $val1 >= $val2;
-                    break;
-                case '<=':
-                    return $val1 <= $val2;
-                    break;
-                case '!=':
-                    return $val1 != $val2;
-                    break;
-                default:
-                    return $val1 == $val2;
-                    break;
-            }
-        }
-        else if($type == 'string'){
-            switch ($operator) {
-                case '!=':
-                    return $val1 > $val2;
-                    break;
-                case 'contains':
-                    return strpos($val1, $val2) !== false;
-                    break;
-                default:
-                    return $val1 == $val2;
-                    break;
-            }
-        }
     }
 
 }
