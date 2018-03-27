@@ -16,26 +16,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
-use function PHPSTORM_META\type;
+use Illuminate\Support\Facades\DB;
 
 
 class AudioController extends TController
 {
 
     public function audio(Request $request){
-//        $validatedData = $request->validate([
-//            'page' => ['min:1']
-//        ]);
-        $page = 1;
         $order_by = 'id';
         $order_type = 'asc';
         $search_col = null;
         $search_val = null;
         $search_operator = null;
         $item_per_page = 10;
-        if($request->has('page')){
-            $page = $request->input('page');
-        }
         if($request->has('item_per_page')){
             $item_per_page = $request->input('item_per_page');
         }
@@ -55,10 +48,11 @@ class AudioController extends TController
             $order_type = $request->input('order_type');
         }
         $audios = Audio::orderBy($order_by, $order_type);
-        /**
-         * Аудио доторх хайлт
-         */
+
         if($search_col != null && $search_val != null){
+            /**
+             * Аудио хүснэгт доторх хайлт
+             */
             if($search_col == 'id' || $search_col == 'file') {
                 if ($search_operator != null) {
                     $audios->where($search_col, $search_operator, $search_val);
@@ -66,91 +60,134 @@ class AudioController extends TController
                     $audios->where($search_col, $search_val);
                 }
             }
-        }
-        $result = $audios->get();
+            /**
+            * Өөр хүснэгтээс хийх хайлтууд
+            */
+            else {
+                $temp_value = null;
+                switch ($search_col) {
+                    case 'transcription':
+                        $audios->whereIn('id', function($query) use($search_operator, $search_val) {
+                            $query->select('task.audio_id')
+                                ->from('task_transcribed AS tt')
+                                ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                                    function($join) {
+                                        $join->on('ld.task_id', '=', 'tt.task_id');
+                                        $join->on('ld.latest', '=', 'tt.created_at');
+                                    })
+                                ->join('task', 'tt.task_id', '=', 'task.id')
+                                ->where('transcription', $search_operator, $search_val);
+                        });
+                        break;
+                    case 'user':
+                        $audios->whereIn('id', function($query) use($search_operator, $search_val) {
+                            $query->select('task.audio_id')
+                                ->from('task_transcribed AS tt')
+                                ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                                    function($join) {
+                                        $join->on('ld.task_id', '=', 'tt.task_id');
+                                        $join->on('ld.latest', '=', 'tt.created_at');
+                                    })
+                                ->join('users', 'tt.user_id', '=', 'users.id')
+                                ->join('task', 'tt.task_id', '=', 'task.id')
+                                ->where('users.name', $search_operator, $search_val);
+                        });
+                        break;
+                    case 'validation_required':
+                        if($search_val == env('VALIDATION_COUNT')){
+                            return redirect($request->fullUrlWithQuery(['search_col' => 'status', 'search_val' => 1]));
+                        }
+                        $audios->whereIn('id', function($query) use($search_operator, $search_val) {
+                            $query->select('task.audio_id')
+                                ->from('task_transcribed AS tt')
+                                ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                                    function($join) {
+                                        $join->on('ld.task_id', '=', 'tt.task_id');
+                                        $join->on('ld.latest', '=', 'tt.created_at');
+                                    })
+                                ->join('task_validated', 'task_validated.task_transcribed_id', '=', 'tt.id')
+                                ->join('task', 'task_validated.task_id', '=', 'task.id')
+                                ->where('task.status', '>=', 0)
+                                ->where('task.status', $search_operator, env('VALIDATION_COUNT') - $search_val);
+                        });
+                        break;
+                    case 'accepted':
+                    case 'declined':
+                        $temp_value = $search_col == 'accepted' ? 'a' : 'd';
+                        $audios->whereIn('id', function($query) use($search_operator, $search_val, $temp_value) {
+                        $query->select('task.audio_id')
+                            ->from('task_transcribed AS tt')
+                            ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                                function($join) {
+                                    $join->on('ld.task_id', '=', 'tt.task_id');
+                                    $join->on('ld.latest', '=', 'tt.created_at');
+                                })
+                            ->join('task_validated AS tv', 'tv.task_transcribed_id', '=', 'tt.id')
+                            ->join('task', 'tv.task_id', '=', 'task.id')
+                            ->where('task.status', '>=', 0)
+                            ->groupBy('task.audio_id')
+                            ->havingRaw('SUM(CASE WHEN tv.validation_status = \''.$temp_value.'\' THEN 1 ELSE 0 END) ' . $search_operator . ' ' . $search_val);
+                        });
+                        break;
+                    case 'status':
+                        switch ($search_val){
+                            case 0:
+                                $audios->whereNotIn('id', function($query) use($search_operator, $search_val) {
+                                    $query->select('task.audio_id')
+                                        ->from('task')
+                                        ->join('task_transcribed', 'task.id', '=', 'task_transcribed.task_id');
+                                });
+                                break;
+                            case 1:
+                                $audios->whereIn('id', function($query) use($search_operator, $search_val) {
+                                    $query->select('task.audio_id')
+                                        ->from('task')
+                                        ->where('task.type', 'v')
+                                        ->where('task.status', '>=', 0)
+                                        ->where('task.status', '<', env('VALIDATION_COUNT'));
+                                });
+                                break;
+                            case 2:
+                            case 3:
+                                $temp_value = $search_val == 2 ? 'a' : 'd';
+                                $audios->whereIn('id', function($query) use($search_operator, $search_val, $temp_value) {
+                                    $query->select('task.audio_id')
+                                        ->from('task_transcribed AS tt')
+                                        ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                                            function($join) {
+                                                $join->on('ld.task_id', '=', 'tt.task_id');
+                                                $join->on('ld.latest', '=', 'tt.created_at');
+                                            })
+                                        ->join('task_validated AS tv', 'tv.task_transcribed_id', '=', 'tt.id')
+                                        ->join('task', 'tv.task_id', '=', 'task.id')
+                                        ->where('task.status', '>=', 0)
+                                        ->groupBy('task.audio_id')
+                                        ->havingRaw('SUM(CASE WHEN tv.validation_status = \''.$temp_value.'\' THEN 1 ELSE 0 END) > ' . env('VALIDATION_COUNT') / 2);
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default: break;
+                }
 
-        /**
-         * Өөр хүснэгтээс хийх хайлтууд
-         */
-        switch ($search_col) {
-            case 'transcription':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->transcription, $search_val, 'string', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'user':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->user->name, $search_val, 'string', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'validation_required':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getRequiredValidation(), $search_val, 'number', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'accepted':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfAccepted(), $search_val, 'number', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'declined':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    if($value->tasks[0]->getLatestTranscribed() != null) {
-                        return $this->compare__operators($value->tasks[0]->getLatestTranscribed()->getNumberOfDeclined(), $search_val, 'number', $search_operator);
-                    }
-                    return false;
-                });
-                break;
-            case 'status':
-                $result = $result->filter(function($value) use ($search_operator, $search_val) {
-                    $status = 0;
-                    if($value->tasks[0]->getLatestTranscribed() == null) {
-                        $status = 0;
-                    }
-                    else {
-                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() > 0) {
-                            $status = 1;
-                        }
-                        if ($value->tasks[0]->getLatestTranscribed()->getRequiredValidation() == 0) {
-                            if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() > 0) {
-                                $status = 2;
-                            }
-                            else if ($value->tasks[0]->getLatestTranscribed()->getValidationStatus() < 0) {
-                                $status = 3;
-                            }
-                        }
-                    }
-                    return $this->compare__operators($status, $search_val, 'number', $search_operator);
-                });
-                break;
-            default: break;
+            }
         }
-        $offset = $item_per_page * ($page-1);
-        $filtered = $result->slice($offset, $item_per_page);
-        $total_rows = $result->count();
+        $result = $audios->paginate($item_per_page);
+
         return view('transcription.audio_list',
             [
-                'audios' => $filtered,
-                'row_from' => $offset+1,
-                'row_to' => $offset + $filtered->count(),
-                'page' => $page,
-                'results' => $filtered->count(),
-                'total_page' => ceil($total_rows/$item_per_page),
-                'total_rows' => $total_rows,
-                'request' => $request,
-                'item_per_page' => $item_per_page
+                'audios' => $result,
+                'total' => $result->total(),
+                'page' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'lastItem' => $result->lastItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'count' => $result->count(),
+                'request' => $request
             ]);
     }
 
@@ -238,44 +275,6 @@ class AudioController extends TController
         $file_path = $dest . '/' . $filename;
         File::put($file_path, json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         return Response::download($file_path);
-    }
-
-    private function compare__operators($val1, $val2, $type = 'number', $operator = '='){
-        if($type == 'number'){
-            switch ($operator) {
-                case '>':
-                    return $val1 > $val2;
-                    break;
-                case '<':
-                    return $val1 < $val2;
-                    break;
-                case '>=':
-                    return $val1 >= $val2;
-                    break;
-                case '<=':
-                    return $val1 <= $val2;
-                    break;
-                case '!=':
-                    return $val1 != $val2;
-                    break;
-                default:
-                    return $val1 == $val2;
-                    break;
-            }
-        }
-        else if($type == 'string'){
-            switch ($operator) {
-                case '!=':
-                    return $val1 > $val2;
-                    break;
-                case 'contains':
-                    return strpos($val1, $val2) !== false;
-                    break;
-                default:
-                    return $val1 == $val2;
-                    break;
-            }
-        }
     }
 
 }
