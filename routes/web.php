@@ -25,6 +25,8 @@ Route::group(['middleware' => ['web', 'notbanned']], function () {
         Route::get('/profile', 'HomeController@profile')->name('profile');
         Route::post('/profile/info', 'HomeController@profile_save')->name('profile.info');
         Route::post('/profile/password', 'HomeController@profile_change_password')->name('profile.password');
+
+        Route::resource('edit', 'TaskEditController');
         Route::group(['middleware' => ['admin']], function () {
             Route::get('/audio', 'AudioController@audio')->name('audio.list');
             Route::post('/audio/delete', 'AudioController@audio_delete')->name('audio.delete');
