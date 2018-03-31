@@ -45,7 +45,7 @@ class TaskController extends TController
                     $query->where('user_id', null)->orWhere('user_id', Auth::user()->id)->orWhere('updated_at', '<', Carbon::now()->subSeconds(env('TIME'))->toDateTimeString());
                 })->first();
                 if($result == null){
-                    return redirect(url()->previous())->withErrors(['Даалгаварыг засахад алдаа гарлаа.']);
+                    return redirect(url()->previous())->withErrors(['Бичвэр оруулах боломжгүй.']);
                 }
             }
             if($result != null){
@@ -63,6 +63,7 @@ class TaskController extends TController
         if($found) {
             return view('transcription.transcribe',
                 [
+                    'edit' => $edit,
                     'task' => $result
                 ]);
         }
@@ -75,15 +76,19 @@ class TaskController extends TController
      * @return \Illuminate\Http\RedirectResponse
      */
     public function transcribe_save(Request $request){
-        $validatedData = $request->validate([
-            'transcription' => ['required', 'max:5000', new TranscriptionRule],
-            'task_id' => ['required']
-        ]);
         $task = Task::find($request->input('task_id'));
         if($task != null){
             if($task->user_id == Auth::user()->id){
-                TaskTranscribed::create(['transcription' => $request->input('transcription'), 'task_id' => $request->input('task_id')]);
+                if($task->status == 1 || (Auth::user()->isAdmin && $request->input('edit') != null)){
+                    TaskTranscribed::create(['transcription' => $request->input('transcription'), 'task_id' => $request->input('task_id')]);
+                }
             }
+            else {
+                return redirect()->route('home');
+            }
+        }
+        if(Auth::user()->isAdmin && $request->input('edit') != null){
+            return redirect(url()->previous())->with('msg', $request->input('edit') . ' дугаартай файлд бичвэр орууллаа.');
         }
         return redirect()->route('transcribe');
     }
@@ -149,7 +154,7 @@ class TaskController extends TController
         $ttask = TaskTranscribed::find($request->input('transcription_id'));
         $error = 2;
         if($ttask != null){
-            if($ttask->user_id != Auth::user()->id && !$ttask->isAlreadyValidated()){
+            if($ttask->user_id != Auth::user()->id && !$ttask->isAlreadyValidated() && $ttask->getRequiredValidation() > 0){
                 TaskValidated::create(
                     [
                         'task_transcribed_id' => $request->input('transcription_id'),

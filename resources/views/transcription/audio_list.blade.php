@@ -217,7 +217,7 @@
                                     </td>
                                     <td>
 {{--                                        @if($audio->tasks[0]->getLatestTranscribed() == null)--}}
-                                        <a href="{{ route('transcribe') }}?edit={{ $audio->tasks[0]->getTTask()->id }}" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Засах"><i class="far fa-edit"></i></a>
+                                        <a href="{{ route('transcribe') }}?edit={{ $audio->tasks[0]->getTTask()->id }}" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Бичвэр оруулах"><i class="far fa-edit"></i></a>
                                         {{--@endif--}}
                                         @if($audio->tasks[0]->getLatestTranscribed() != null)
                                             @if($audio->tasks[0]->getLatestTranscribed()->getRequiredValidation() > 0)

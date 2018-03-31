@@ -34,6 +34,7 @@
                                 <form action="{{ route('transcribe.save') }}" id="transcription-form" method="post">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="task_id" class="form-control" value="{{ $task->id }}">
+                                    <input type="hidden" name="edit" class="form-control" value="{{ $edit }}">
                                     <textarea class="form-control transcription" id="transcription" name="transcription">{{ old('transcription') }}</textarea>
                                     <br>
                                     <p class="text-center"><strong>БИЧВЭР:</strong> <span id="status" class="text-secondary"><i class="far fa-ban"></i> ШАЛГААГҮЙ</span></p>
