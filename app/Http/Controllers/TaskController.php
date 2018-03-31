@@ -76,6 +76,10 @@ class TaskController extends TController
      * @return \Illuminate\Http\RedirectResponse
      */
     public function transcribe_save(Request $request){
+        $validatedData = $request->validate([
+            'transcription' => ['required', 'max:5000', new TranscriptionRule],
+            'task_id' => ['required']
+        ]);
         $task = Task::find($request->input('task_id'));
         if($task != null){
             if($task->user_id == Auth::user()->id){

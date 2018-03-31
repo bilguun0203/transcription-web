@@ -53,6 +53,11 @@ class TaskTranscribed extends Model
         return $this->hasMany('App\TaskValidated');
     }
 
+    public function edited()
+    {
+        return $this->hasMany('App\TaskEdit');
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User');
