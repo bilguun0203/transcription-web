@@ -10,9 +10,11 @@ namespace App\Http\Controllers;
 
 use App\Rules\TranscriptionRule;
 use \App\Task;
+use App\TaskEdit;
 use App\TaskTranscribed;
 use App\TaskValidated;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use \Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -188,6 +190,69 @@ class TaskController extends TController
         return redirect()->route('validate');
     }
 
-
+    public function edit_transcription(Request $request){
+        $found = true;
+        $result = null;
+        $te = TaskEdit::where([['user_id', Auth::user()->id], ['status', 0]])->first();
+        $ttasks = TaskTranscribed::orderBy('id', 'asc');
+        if($te == null){
+            $result = $ttasks->whereIn('id', function($query) {
+                $query->select('tt.id')
+                    ->from('task_transcribed AS tt')
+                    ->join(DB::raw('(SELECT task_id, MAX(created_at) AS latest FROM task_transcribed GROUP BY task_id) ld'),
+                        function ($join) {
+                            $join->on('ld.task_id', '=', 'tt.task_id');
+                            $join->on('ld.latest', '=', 'tt.created_at');
+                        })
+                    ->join('task_validated AS tv', 'tv.task_transcribed_id', '=', 'tt.id')
+                    ->join('task', 'tv.task_id', '=', 'task.id')
+                    ->where('task.status', '=', env('VALIDATION_COUNT'))
+                    ->groupBy('tt.id')
+                    ->havingRaw('SUM(CASE WHEN tv.validation_status = \'a\' THEN 1 ELSE 0 END) > ' . env('VALIDATION_COUNT') / 2);
+            })->has('edited', '<', 1)->orWhereHas('edited', function($q) {
+                $q->where([
+                    ['updated_at', '<', Carbon::now()->subSeconds(env('TIME'))->toDateTimeString()],
+                    ['status', 0]
+                ]);
+            })->first();
+//            dump($result);
+//            return null;
+//            $ttask = TaskTranscribed::where(['id', $task->id]);
+            if($result != null){
+                if($result->edited()->count() > 0){
+                    $te = $result->edited()->latest()->first();
+                    if($te->status == 0){
+                        $te->user_id = Auth::user()->id;
+                        $te->save();
+                        $found = true;
+                    }
+                    else {
+                        $found = false;
+                    }
+                }
+                else {
+                    $te = new TaskEdit();
+                    $te->task_transcribed_id = $result->id;
+                    $te->save();
+                    $found = true;
+                }
+            }
+            else {
+                $found = false;
+            }
+        }
+        else {
+            $te->touch();
+            $result = $te->transcribed;
+        }
+        if($found) {
+            return view('transcription.edit',
+                [
+                    'task' => $te,
+                    'task_transcribed' => $result
+                ]);
+        }
+        return redirect()->route('home')->with('msg', 'Засах боломжтой бичвэр олдсонгүй. Дараа дахин шалгана уу.');
+    }
 
 }

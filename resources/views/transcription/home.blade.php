@@ -83,6 +83,18 @@
                 </div>
             </div>
         </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Аудио файлын бичвэрийг засах.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ route('edit_transcription') }}" class="btn btn-primary btn-block btn-raised"><i class="far fa-pencil"></i> Бичвэр засах</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         @auth
             @if(Auth::user()->isAdmin())
                 <hr>
