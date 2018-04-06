@@ -255,4 +255,18 @@ class TaskController extends TController
         return redirect()->route('home')->with('msg', 'Засах боломжтой бичвэр олдсонгүй. Дараа дахин шалгана уу.');
     }
 
+    public function edit_transcription_save(Request $request){
+        $validatedData = $request->validate([
+            'transcription' => ['required', 'max:5000', new TranscriptionRule],
+            'task_id' => ['required']
+        ]);
+        $te = TaskEdit::find($request->input('task_id'));
+        if($te->user_id == Auth::user()->id && $te->status == 0){
+            $te->transcription = $request->input('transcription');
+            $te->status = 1;
+            $te->save();
+        }
+        return redirect()->route('edit_transcription');
+    }
+
 }
