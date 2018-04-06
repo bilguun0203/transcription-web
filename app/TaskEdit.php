@@ -24,10 +24,6 @@ class TaskEdit extends Model
             $model->transcription = $tt->transcription;
             $model->status = 0;
         });
-
-        self::saving(function ($model) {
-            $model->status = 1;
-        });
     }
 
     public function transcribed()
