@@ -160,7 +160,7 @@ class AudioController extends TController
                                             })
                                         ->join('task_validated AS tv', 'tv.task_transcribed_id', '=', 'tt.id')
                                         ->join('task', 'tv.task_id', '=', 'task.id')
-                                        ->where('task.status', '>=', 0)
+                                        ->where('task.status', '=', env('VALIDATION_COUNT'))
                                         ->groupBy('task.audio_id')
                                         ->havingRaw('SUM(CASE WHEN tv.validation_status = \''.$temp_value.'\' THEN 1 ELSE 0 END) > ' . env('VALIDATION_COUNT') / 2);
                                 });
