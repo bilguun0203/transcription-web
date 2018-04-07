@@ -27,6 +27,9 @@ class TaskController extends TController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function transcribe(Request $request){
+        if(env('ENABLE_TASK_TRANSCRIBE') != 1){
+            return redirect()->route('home')->with('warning', 'Бичвэр болгох даалгавар идэвхгүй байна. Дараа дахин шалгана уу.');
+        }
         $found = true;
         $result = null;
         $edit = false;
@@ -78,6 +81,9 @@ class TaskController extends TController
      * @return \Illuminate\Http\RedirectResponse
      */
     public function transcribe_save(Request $request){
+        if(env('ENABLE_TASK_TRANSCRIBE') != 1){
+            return redirect()->route('home')->with('warning', 'Бичвэр болгох даалгавар идэвхгүй байна. Дараа дахин шалгана уу.');
+        }
         $validatedData = $request->validate([
             'transcription' => ['required', 'max:5000', new TranscriptionRule],
             'task_id' => ['required']
@@ -111,6 +117,9 @@ class TaskController extends TController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function validate_transcription(){
+        if(env('ENABLE_TASK_VALIDATE') != 1){
+            return redirect()->route('home')->with('warning', 'Бичвэр шалгах даалгавар идэвхгүй байна. Дараа дахин шалгана уу.');
+        }
         $found = true;
         $task = Task::where([['user_id', Auth::user()->id], ['type', 'v']])->first();
         if($task == null){
@@ -152,6 +161,9 @@ class TaskController extends TController
      * @return \Illuminate\Http\RedirectResponse
      */
     public function validate_transcription_save(Request $request) {
+        if(env('ENABLE_TASK_VALIDATE') != 1){
+            return redirect()->route('home')->with('warning', 'Бичвэр шалгах даалгавар идэвхгүй байна. Дараа дахин шалгана уу.');
+        }
         $validatedData = $request->validate([
             'validation' => ['required', Rule::in(['a', 'd'])],
             'task_id' => ['required'],
@@ -191,6 +203,9 @@ class TaskController extends TController
     }
 
     public function edit_transcription(Request $request){
+        if(env('ENABLE_TASK_EDIT') != 1){
+            return redirect()->route('home')->with('warning', 'Бичвэр засах даалгавар идэвхгүй байна. Дараа дахин шалгана уу.');
+        }
         $found = true;
         $result = null;
         $te = TaskEdit::where([['user_id', Auth::user()->id], ['status', 0]])->first();
@@ -256,6 +271,9 @@ class TaskController extends TController
     }
 
     public function edit_transcription_save(Request $request){
+        if(env('ENABLE_TASK_EDIT') != 1){
+            return redirect()->route('home')->with('warning', 'Бичвэр засах даалгавар идэвхгүй байна. Дараа дахин шалгана уу.');
+        }
         $validatedData = $request->validate([
             'transcription' => ['required', 'max:5000', new TranscriptionRule],
             'task_id' => ['required']

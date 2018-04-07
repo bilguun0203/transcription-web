@@ -36,9 +36,15 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{{ route('home') }}">Эхлэл</a>
             </li>
+            @if(env('ENABLE_TASK_TRANSCRIBE') == 1)
             <li class="nav-item"><a class="nav-link" href="{{ route('transcribe') }}">Бичвэрт буулгах</a></li>
+            @endif
+            @if(env('ENABLE_TASK_VALIDATE') == 1)
             <li class="nav-item"><a class="nav-link" href="{{ route('validate') }}">Шалгах</a></li>
+            @endif
+            @if(env('ENABLE_TASK_EDIT') == 1)
             <li class="nav-item"><a class="nav-link" href="{{ route('edit_transcription') }}">Засах</a></li>
+            @endif
             @auth
                 @if(Auth::user()->isAdmin())
                     <li class="nav-item"><a class="nav-link" href="{{ route('audio.list') }}">Аудио файлууд</a></li>

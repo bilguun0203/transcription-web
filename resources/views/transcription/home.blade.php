@@ -33,9 +33,23 @@
             </div>
         </div>
         @endif
+        @if(session('warning'))
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-6 col-sm-8 col-xs-12">
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                            <span class="sr-only">Хаах</span>
+                        </button>
+                        {{ session('warning') }}
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <div class="row justify-content-center mt-5">
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
+                @if(env('ENABLE_TASK_TRANSCRIBE') == 1)
                 <div class="card">
                     <div class="card-body">
                         <p>Аудио файл дахь яриаг заасан дүрмийн дагуу бичвэр болгох.</p>
@@ -44,8 +58,12 @@
                         <a href="{{ route('transcribe') }}" class="btn btn-info btn-block btn-raised"><i class="far fa-pencil"></i> Бичвэрт буулгах</a>
                     </div>
                 </div>
+                @else
+                    <p class="text-secondary font-italic text-center">Бичвэр болгох даалгавар идэвхгүй</p>
+                @endif
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
+                @if(env('ENABLE_TASK_VALIDATE') == 1)
                 <div class="card">
                     <div class="card-body">
                         <p>Бичвэр болгосон яриаг сонсож таарч байгаа эсэхийг шалгаж "зөв" болон "буруу" гэсэн саналын аль нэгийг өгнө.</p>
@@ -54,8 +72,12 @@
                         <a href="{{ route('validate') }}" class="btn btn-danger btn-block btn-raised"><i class="far fa-check"></i> Шалгах</a>
                     </div>
                 </div>
+                @else
+                    <p class="text-secondary font-italic text-center">Бичвэр шалгах даалгавар идэвхгүй</p>
+                @endif
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8">
+                @if(env('ENABLE_TASK_EDIT') == 1)
                 <div class="card">
                     <div class="card-body">
                         <p>Аудио файлд бичвэр оруулахад алдаа гаргасан эсэхийг шалгаж гарсан бол түүнийг нь дүрмийн дагуу засаад хадгална.</p>
@@ -64,6 +86,9 @@
                         <a href="{{ route('edit_transcription') }}" class="btn btn-primary btn-block btn-raised"><i class="far fa-pencil"></i> Бичвэр засах</a>
                     </div>
                 </div>
+                @else
+                    <p class="text-secondary font-italic text-center">Бичвэр засах даалгавар идэвхгүй</p>
+                @endif
             </div>
         </div>
         <div class="row justify-content-center mt-3">
