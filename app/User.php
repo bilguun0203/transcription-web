@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->hasMany('App\TaskValidated');
     }
 
+    public function task_edited()
+    {
+        return $this->hasMany('App\TaskEdit');
+    }
+
     public function isAdmin()
     {
         return $this->isAdmin;
@@ -63,7 +68,8 @@ class User extends Authenticatable
             'validate' => [
                 'a' =>0,
                 'd' =>0,
-            ]
+            ],
+            'edit' => 0
         ];
         foreach ($this->task_transcribed as $item){
             if($item->getRequiredValidation() == 0){
@@ -81,6 +87,7 @@ class User extends Authenticatable
         foreach ($this->task_validated as $item){
             $status['validate'][$item->validation_status]++;
         }
+        $status['edit'] = $this->task_edited()->count();
         return $status;
     }
 
@@ -96,6 +103,7 @@ class User extends Authenticatable
             + $status['transcribe']['a'] * env('SCORE_PER_ACCEPTED_TRANSCRIPTION')
             + $status['transcribe']['d'] * env('SCORE_PER_DECLINED_TRANSCRIPTION');
         $score['validate'] = ($status['validate']['a'] + $status['validate']['d']) * env('SCORE_VALIDATE');
+        $score['edit'] = $status['edit'] * env('SCORE_EDIT_TRANSCRIPTION');
         return $score;
     }
 }
