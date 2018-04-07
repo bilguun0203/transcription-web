@@ -54,20 +54,25 @@
                     <div class="card-body">
                         <h6>Миний бичвэр болгосон</h6>
                         <ul>
-                            <li>Нийт: {{ $statust['a'] + $statust['d'] + $statust['p'] }}</li>
-                            <li>Зөвшөөрөгдсөн: {{ $statust['a'] }}</li>
-                            <li>Зөвшөөрөөгүй: {{ $statust['d'] }}</li>
-                            <li>Хүлээгдэж байгаа: {{ $statust['p'] }}</li>
-                            <li><strong>Оноо:</strong> {{ Auth::user()->score()['transcribe'] }}</li>
+                            <li>Нийт: {{ $status['transcribe']['a'] + $status['transcribe']['d'] + $status['transcribe']['p'] }}</li>
+                            <li>Зөвшөөрөгдсөн: {{ $status['transcribe']['a'] }}</li>
+                            <li>Зөвшөөрөөгүй: {{ $status['transcribe']['d'] }}</li>
+                            <li>Хүлээгдэж байгаа: {{ $status['transcribe']['p'] }}</li>
+                            <li><strong>Оноо:</strong> {{ $score['transcribe'] }}</li>
                         </ul>
                         <h6>Миний шалгасан</h6>
                         <ul>
-                            <li>Нийт: {{ $statusv['a'] + $statusv['d'] }}</li>
-                            <li>Зөв: {{ $statusv['a'] }}</li>
-                            <li>Буруу: {{ $statusv['d'] }}</li>
-                            <li><strong>Оноо:</strong> {{ Auth::user()->score()['validate'] }}</li>
+                            <li>Нийт: {{ $status['validate']['a'] + $status['validate']['d'] }}</li>
+                            <li>Зөв: {{ $status['validate']['a'] }}</li>
+                            <li>Буруу: {{ $status['validate']['d'] }}</li>
+                            <li><strong>Оноо:</strong> {{ $score['validate'] }}</li>
                         </ul>
-                        <h6>Нийт оноо: {{ Auth::user()->score()['transcribe'] + Auth::user()->score()['validate'] }}</h6>
+                        <h6>Миний зассан</h6>
+                        <ul>
+                            <li>Нийт: {{ $status['edit'] }}</li>
+                            <li><strong>Оноо:</strong> {{ $score['edit'] }}</li>
+                        </ul>
+                        <h6>Нийт оноо: {{ $score['transcribe'] + $score['validate'] + $score['edit'] }}</h6>
                     </div>
                 </div>
             </div>

@@ -22,39 +22,31 @@ class HomeController extends TController
 {
 
     public function home(){
-        $statust = [
-            'a' =>0,
-            'd' =>0,
-            'p' =>0,
+        $status = [
+            'transcribe' => [
+                'a' =>0,
+                'd' =>0,
+                'p' =>0,
+            ],
+            'validate' => [
+                'a' =>0,
+                'd' =>0,
+            ],
+            'edit' => 0
         ];
-        $statusv = [
-            'a' =>0,
-            'd' =>0,
+        $score = [
+            'transcribe' => 0,
+            'validate' => 0,
+            'edit' => 0
         ];
         if(Auth::check()){
-            $transcriptions = TaskTranscribed::where('user_id', Auth::user()->id)->get();
-            foreach ($transcriptions as $item){
-                if($item->getRequiredValidation() == 0){
-                    if($item->getValidationStatus() > 0){
-                        $statust['a']++;
-                    }
-                    else {
-                        $statust['d']++;
-                    }
-                }
-                else {
-                    $statust['p']++;
-                }
-            }
-            $validations = TaskValidated::where('user_id', Auth::user()->id)->get();
-            foreach ($validations as $item){
-                $statusv[$item->validation_status]++;
-            }
+            $status = Auth::user()->status();
+            $score = Auth::user()->score();
         }
         return view('transcription.home',
             [
-                'statust' => $statust,
-                'statusv' => $statusv
+                'status' => $status,
+                'score' => $score
             ]);
     }
 
