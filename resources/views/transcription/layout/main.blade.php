@@ -38,6 +38,7 @@
             </li>
             <li class="nav-item"><a class="nav-link" href="{{ route('transcribe') }}">Бичвэрт буулгах</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('validate') }}">Шалгах</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('edit_transcription') }}">Засах</a></li>
             @auth
                 @if(Auth::user()->isAdmin())
                     <li class="nav-item"><a class="nav-link" href="{{ route('audio.list') }}">Аудио файлууд</a></li>
