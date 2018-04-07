@@ -124,7 +124,7 @@
                                     <td scope="row">{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->score()['transcribe'] + $user->score()['validate'] }}</td>
+                                    <td>{{ $user->score()['transcribe'] + $user->score()['validate'] + $user->score()['edit'] }}</td>
                                     <td>
                                         @if($user->isBanned())
                                             <div class="badge badge-danger">ХОРИГЛОСОН</div>
