@@ -168,7 +168,7 @@
                                     </td>
                                     <td scope="row">{{ $audio->id }}</td>
                                     <td>
-                                        <audio controls src="@if($audio->isLocal){{ asset($audio->url .  $audio->file) }}@else{{ $audio->url . $audio->file }}@endif" type="audio_files/wav"></audio>
+                                        <audio controls src="@if($audio->isLocal){{ asset((substr($audio->url, -1) == '/' ? $audio->url : $audio->url . '/') . $audio->file) }}@else{{ (substr($audio->url, -1) == '/' ? $audio->url : $audio->url . '/') . $audio->file }}@endif" type="audio_files/wav"></audio>
                                     </td>
                                     @if($audio->tasks[0]->getLatestTranscribed() != null)
                                         <td data-toggle="tooltip" data-placement="top" title="{{ $audio->tasks[0]->getLatestTranscribed()->user->name }}">
