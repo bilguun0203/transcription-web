@@ -13,7 +13,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Хэрэглэгчид</h4>
-                        <h6 class="card-subtitle text-muted mt-2"><strong>Нийт:</strong> {{ $total_rows }} <strong>Хүснэгтэнд:</strong> {{ $row_from }} - {{ $row_to }}</h6>
+                        <h6 class="card-subtitle text-muted mt-2"><strong>Нийт:</strong> {{ $total }} <strong>Хүснэгтэнд:</strong> {{ $firstItem }} - {{ $lastItem }}</h6>
                         <hr>
                         @if(session('msg'))
                             <div class="row justify-content-center">
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                         @endforeach
-                        @if($results == 0)
+                        @if($count == 0)
                             <div class="row justify-content-center">
                                 <div class="col-md-6 col-sm-8 col-xs-12">
                                     <div class="alert alert-danger">
@@ -180,29 +180,27 @@
                             <ul class="pagination">
                                 <li class="page-item @if($page == 1)disabled @endif">
                                     <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => 1]) }}" aria-label="First">
-                                        <span aria-hidden="true"><i class="far fa-chevron-double-left"></i></span>
-                                        <span class="sr-only">Эхнийх</span>
+                                        <span aria-hidden="true"><i class="far fa-chevron-double-left"></i> Эхнийх</span>
                                     </a>
                                 </li>
                                 <li class="page-item @if($page == 1)disabled @endif">
-                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $page - 1]) }}" aria-label="Previous">
-                                        <span aria-hidden="true"><i class="far fa-chevron-left"></i></span>
-                                        <span class="sr-only">Өмнөх</span>
+                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $page-1]) }}" aria-label="Previous">
+                                        <span aria-hidden="true"><i class="far fa-chevron-left"></i> Өмнөх</span>
                                     </a>
                                 </li>
-                                @for($i=1; $i<=$total_page; $i++)
-                                    <li class="page-item @if($page == $i)active @endif"><a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
-                                @endfor
-                                <li class="page-item @if($page >= $total_page)disabled @endif">
-                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $page + 1]) }}" aria-label="Next">
-                                        <span aria-hidden="true"><i class="far fa-chevron-right"></i></span>
-                                        <span class="sr-only">Дараах</span>
+                                <li class="page-item active">
+                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $page]) }}" aria-label="Current">
+                                        <span aria-hidden="true">{{ $page }}</span>
                                     </a>
                                 </li>
-                                <li class="page-item @if($page >= $total_page)disabled @endif">
-                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $total_page]) }}" aria-label="Last">
-                                        <span aria-hidden="true"><i class="far fa-chevron-double-right"></i></span>
-                                        <span class="sr-only">Сүүлийнх</span>
+                                <li class="page-item @if(!$hasMorePages)disabled @endif">
+                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $page+1]) }}" aria-label="Next">
+                                        <span aria-hidden="true">Дараах <i class="far fa-chevron-right"></i></span>
+                                    </a>
+                                </li>
+                                <li class="page-item @if(!$hasMorePages)disabled @endif">
+                                    <a class="page-link" href="{{ $request->fullUrlWithQuery(['page' => $lastPage]) }}" aria-label="Last">
+                                        <span aria-hidden="true">Сүүлийнх <i class="far fa-chevron-double-right"></i></span>
                                     </a>
                                 </li>
                             </ul>

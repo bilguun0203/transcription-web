@@ -18,7 +18,7 @@ class UserController extends TController
 //        $validatedData = $request->validate([
 //            'page' => ['min:1']
 //        ]);
-        $page = 1;
+//        $page = 1;
         $order_by = 'id';
         $order_type = 'asc';
         $search_col = null;
@@ -46,31 +46,36 @@ class UserController extends TController
         if($request->has('order_type')){
             $order_type = $request->input('order_type');
         }
-        $audios = User::orderBy($order_by, $order_type);
+        $users = User::orderBy($order_by, $order_type);
         if($search_col != null && $search_val != null){
             if($search_operator != null){
-                $audios->where($search_col, $search_operator, $search_val);
+                $users->where($search_col, $search_operator, $search_val);
             }
             else {
-                $audios->where($search_col, $search_val);
+                $users->where($search_col, $search_val);
             }
         }
-        $result = $audios->get();
 
-        $offset = $item_per_page * ($page-1);
-        $filtered = $result->slice($offset, $item_per_page);
-        $total_rows = $result->count();
+//        $offset = $item_per_page * ($page-1);
+
+        $result = $users->paginate($item_per_page);
+//        $result = $users->offset($offset)->limit($item_per_page)->get();
+
+//        $filtered = $result->slice($offset, $item_per_page);
+//        $total_rows = User::count();
         return view('transcription.users',
             [
-                'users' => $filtered,
-                'row_from' => $offset+1,
-                'row_to' => $offset + $result->count(),
-                'page' => $page,
-                'results' => $result->count(),
-                'total_page' => ceil($total_rows/$item_per_page),
-                'total_rows' => $total_rows,
-                'request' => $request,
-                'item_per_page' => $item_per_page
+                'users' => $result,
+                'total' => $result->total(),
+                'page' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'lastItem' => $result->lastItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'count' => $result->count(),
+                'item_per_page' => $item_per_page,
+                'request' => $request
             ]);
     }
 
