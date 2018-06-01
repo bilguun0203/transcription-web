@@ -86,17 +86,16 @@ class User extends Authenticatable
             ->having('tv.user_id', '=', $this->id)->first();
         $status = [
             'transcribe' => [
-                'a' =>$tt->total_a,
-                'd' =>$tt->total_d,
-                'p' =>$tt->total_p,
+                'a' => $tt != null ? $tt->total_a : 0,
+                'd' => $tt != null ? $tt->total_d : 0,
+                'p' => $tt != null ? $tt->total_p : 0,
             ],
             'validate' => [
-                'a' =>$tv->a,
-                'd' =>$tv->d,
+                'a' => $tv != null ? $tv->a : 0,
+                'd' => $tv != null ? $tv->a : 0,
             ],
             'edit' => $this->task_edited()->count()
         ];
-        $status['edit'] = $this->task_edited()->count();
         return $status;
     }
 
