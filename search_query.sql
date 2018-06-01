@@ -119,3 +119,57 @@ FROM audio
 WHERE id NOT IN (SELECT audio_id
                  FROM task
                    INNER JOIN task_transcribed t2 ON task.id = t2.task_id);
+
+#-----------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------
+
+# Шалгах даалгавар хийсэн тоо
+SELECT
+  u.id,
+  SUM(CASE WHEN validation_status = 'a'
+    THEN 1
+      ELSE 0 END) AS 'a',
+  SUM(CASE WHEN validation_status = 'd'
+    THEN 1
+      ELSE 0 END) AS 'd'
+FROM task_validated tv RIGHT JOIN users u ON tv.user_id = u.id
+GROUP BY u.id ORDER BY u.id;
+
+SELECT
+  u.id,
+  SUM(CASE WHEN validation_status = 'a'
+    THEN 1
+      ELSE 0 END) AS 'a',
+  SUM(CASE WHEN validation_status = 'd'
+    THEN 1
+      ELSE 0 END) AS 'd'
+FROM task_validated tv RIGHT JOIN users u ON tv.user_id = u.id
+GROUP BY u.id ORDER BY u.id;
+
+# Бичвэр болгох даалгавар хийсэн тоо
+
+SELECT
+  tt.user_id,
+  COUNT(tt.id) AS transcription_count,
+  SUM(CASE WHEN tt.vcount >= 3 AND tt.vstatus = 1 THEN 1 ELSE 0 END) AS total_a,
+  SUM(CASE WHEN tt.vcount >= 3 AND tt.vstatus = 0 THEN 1 ELSE 0 END) AS total_d,
+  SUM(CASE WHEN tt.vcount < 3 THEN 1 ELSE 0 END) AS total_p
+FROM (SELECT
+        tt.id,
+        MAX(tt.user_id) AS user_id,
+        SUM(CASE WHEN tv.validation_status = 'a'
+          THEN 1
+            ELSE 0 END) AS 'a',
+        SUM(CASE WHEN tv.validation_status = 'd'
+          THEN 1
+            ELSE 0 END) AS 'd',
+        COUNT(tv.id) AS 'vcount',
+        (CASE WHEN SUM(CASE WHEN tv.validation_status = 'a'
+          THEN 1
+            ELSE 0 END) > SUM(CASE WHEN tv.validation_status = 'd'
+          THEN 1
+            ELSE 0 END) THEN 1 ELSE 0 END) AS 'vstatus'
+      FROM task_validated tv RIGHT JOIN task_transcribed tt on tv.task_transcribed_id = tt.id
+      GROUP BY tt.id HAVING user_id = 1) tt
+GROUP BY tt.user_id;
